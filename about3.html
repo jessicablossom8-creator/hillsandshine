@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>找到你的老師｜山所·沐光</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: #F5F0EB;
+    color: #3A3530;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 44px 24px 52px;
+  }
+
+  .header { text-align: center; margin-bottom: 34px; }
+  .studio-name { font-size: 11px; letter-spacing: 4px; color: #B5A89A; margin-bottom: 12px; text-transform: uppercase; }
+  h1 { font-size: 24px; font-weight: 400; letter-spacing: 3px; color: #3A3530; margin-bottom: 5px; }
+  .map-subtitle { font-size: 13px; color: #9A8C7E; letter-spacing: 2px; }
+
+  /* Selector */
+  .selector-wrapper { display: flex; gap: 40px; margin-bottom: 26px; justify-content: center; flex-wrap: wrap; }
+  .axis-group { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+  .axis-group-label { font-size: 10px; letter-spacing: 3px; color: #B5A89A; text-transform: uppercase; }
+  .btn-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+  .axis-btn {
+    padding: 5px 12px; border: 1px solid #D4C5B8; background: transparent;
+    border-radius: 20px; font-size: 11px; cursor: pointer; color: #7A6E65;
+    transition: all 0.15s; font-family: inherit; white-space: nowrap;
+  }
+  .axis-btn:hover { border-color: #9A8C7E; color: #3A3530; background: rgba(255,255,255,0.5); }
+  .axis-btn.active { background: #3A3530; border-color: #3A3530; color: #F5F0EB; }
+  .axis-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Chart */
+  .chart-wrap { width: 660px; max-width: 100%; }
+  #chart-svg { width: 100%; height: auto; display: block; }
+
+  /* Info Panel */
+  .info-panel {
+    width: 660px; max-width: 100%; background: #fff; border: 1px solid #E8E0D8;
+    border-radius: 14px; padding: 20px 24px; margin-top: 16px;
+    min-height: 86px; display: flex; align-items: center;
+  }
+  .info-placeholder { color: #C5BAB0; font-size: 13px; width: 100%; text-align: center; letter-spacing: 1px; }
+  .info-content { width: 100%; }
+  .info-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
+  .info-teacher { font-size: 18px; font-weight: 400; letter-spacing: 1px; }
+  .info-dot { font-size: 14px; color: #C5BAB0; }
+  .info-course { font-size: 14px; color: #6A5D54; }
+  .info-desc { font-size: 13px; color: #5A5048; line-height: 1.85; margin-bottom: 12px; }
+  .info-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .info-tag { padding: 3px 10px; border: 1px solid #D4C5B8; border-radius: 12px; font-size: 11px; color: #9A8C7E; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: center; margin-top: 20px; width: 660px; max-width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #7A6E65; cursor: pointer; padding: 3px 6px; border-radius: 6px; transition: background 0.15s; }
+  .legend-item:hover { background: rgba(255,255,255,0.7); }
+  .legend-item.dimmed { opacity: 0.3; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Mobile RWD ── */
+  @media (max-width: 700px) {
+    .chart-wrap, .info-panel, .legend { width: 100%; }
+  }
+  @media (max-width: 520px) {
+    body { padding: 28px 14px 40px; }
+    h1 { font-size: 20px; letter-spacing: 2px; }
+    .map-subtitle { font-size: 12px; }
+    .selector-wrapper { gap: 18px; flex-direction: column; align-items: center; }
+    /* Keep all 4 buttons on one row, allow horizontal scroll if needed */
+    .btn-row {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 4px;
+    }
+    .btn-row::-webkit-scrollbar { display: none; }
+    .axis-btn { padding: 4px 8px; font-size: 9.5px; flex-shrink: 0; }
+    .info-panel { padding: 16px 16px; }
+    .info-teacher { font-size: 16px; }
+    .info-course { font-size: 13px; }
+    .info-desc { font-size: 12px; line-height: 1.75; }
+    .legend { gap: 8px 14px; }
+    .legend-item { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="studio-name">Hills &amp; Shine · 山所·沐光</div>
+  <h1>找到你的老師</h1>
+  <div class="map-subtitle">老師風格探索地圖</div>
+</div>
+
+<div class="selector-wrapper">
+  <div class="axis-group">
+    <div class="axis-group-label">橫軸</div>
+    <div class="btn-row" id="x-row">
+      <button class="axis-btn active" data-idx="0" onclick="pickAxis('x',0,this)">流汗 ↔ 伸展停留</button>
+      <button class="axis-btn"        data-idx="1" onclick="pickAxis('x',1,this)">溫柔 ↔ 激勵嚴格</button>
+      <button class="axis-btn"        data-idx="2" onclick="pickAxis('x',2,this)">身體 ↔ 心靈</button>
+      <button class="axis-btn"        data-idx="3" onclick="pickAxis('x',3,this)">初學 ↔ 進階</button>
+    </div>
+  </div>
+  <div class="axis-group">
+    <div class="axis-group-label">縱軸</div>
+    <div class="btn-row" id="y-row">
+      <button class="axis-btn"        data-idx="0" onclick="pickAxis('y',0,this)">流汗 ↔ 伸展停留</button>
+      <button class="axis-btn active" data-idx="1" onclick="pickAxis('y',1,this)">溫柔 ↔ 激勵嚴格</button>
+      <button class="axis-btn"        data-idx="2" onclick="pickAxis('y',2,this)">身體 ↔ 心靈</button>
+      <button class="axis-btn"        data-idx="3" onclick="pickAxis('y',3,this)">初學 ↔ 進階</button>
+    </div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <svg id="chart-svg" viewBox="0 0 660 530" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<div class="info-panel" id="info-panel">
+  <div class="info-placeholder">點擊圓點，查看課程介紹</div>
+</div>
+
+<div class="legend" id="legend"></div>
+
+<script>
+// ─── TEACHER COLORS (真真 removed) ────────────
+const TEACHERS = {
+  'Amy':    '#C4856A',
+  'Bao':    '#8FAF8F',
+  'Bella':  '#7AA8A0',
+  'Caca':   '#C49A5A',
+  'Cher':   '#9B89A8',
+  'Chloe':  '#7A9BAF',
+  'Jiajia': '#B87C5A',
+  'Lany':   '#8B79A8',
+  'Sisi':   '#5A90A8',
+  '西卡':   '#AF7A82',
+  '鈺瑩':   '#8AAF7A',
+  '顏顏':   '#7AA899',
+};
+
+// ─── COURSES ──────────────────────────────────
+// scores: [流汗→伸展(0→10), 溫柔→激勵嚴格(0→10), 身體→心靈(0→10), 初學→進階(0→10)]
+const courses = [
+
+  // ─── Amy ───────────────────────
+  { teacher:'Amy', short:'哈達課', course:'哈達主題課',
+    desc:'每週不同練習主題，活用輔具幫助理解身體卡住的地方，找到最舒適穩定的方式練習體位法，讓身體好好流汗、好好鍛鍊，享受瑜伽的美好。',
+    tags:['Hatha Focus','每週主題','有流汗感'], scores:[2.5,7.5,3.0,6.5] },
+  { teacher:'Amy', short:'椅子瑜伽', course:'椅子瑜伽',
+    desc:'透過椅子輔助完成地板上做不到的體位。修復者可在「恢復性」停留中感受輔具的支持；進階者可借助椅子做更高難度的體式。適合所有層級的練習者。',
+    tags:['Chair Yoga','全階段','輔具輔助'], scores:[6.5,5.0,4.0,4.0] },
+
+  // ─── Bao ───────────────────────
+  { teacher:'Bao', short:'溫和延展', course:'溫和延展瑜伽',
+    desc:'透過呼吸引導溫和延展脊柱、骨盆與髖關節，讓身體從中釋壓、更靈活。適合需要靜心、讓紛亂思緒漸漸安定的練習者。搭配卡牌引導。',
+    tags:['Gentle Yoga','初學者友善','抽卡牌'], scores:[8.0,2.5,6.5,2.0] },
+  { teacher:'Bao', short:'主題課', course:'主題課',
+    desc:'以主題式的方式探索身體的不同面向，每週有明確的焦點，動靜均衡，幫助練習者在身心各層面穩健地成長。搭配卡牌引導。',
+    tags:['主題課','均衡練習','抽卡牌'], scores:[5.0,5.0,5.0,5.0] },
+  { teacher:'Bao', short:'基礎瑜伽', course:'基礎瑜伽',
+    desc:'從最基礎的覺知與呼吸開始，帶著意識進入體位練習。課程兼顧身心，在建立基礎的同時引導內在探索。搭配卡牌引導，幫助練習者連結當下的身心狀態。',
+    tags:['基礎瑜伽','初學者友善','抽卡牌'], scores:[5.5,4.5,6.5,4.5] },
+
+  // ─── Bella ─────────────────────
+  { teacher:'Bella', short:'陰瑜伽', course:'陰瑜伽',
+    desc:'在體位中做長時間停留，透過穩定呼吸喚起副交感神經，讓肌肉完全延展、消除肌肉纖維與組織的緊繃，達到自我療癒的效果。不比較、不逞強，感受「我和自己在一起」的當下。',
+    tags:['Yin Yoga','深層放鬆','自我療癒'], scores:[7.0,2.0,8.5,2.5] },
+  { teacher:'Bella', short:'溫和流動', course:'溫和流動',
+    desc:'以溫柔的節奏串連動作，帶著呼吸讓身體在流動中慢慢甦醒與活化。不過度用力，在安心的狀態下感受身體每個部位的啟動，是一堂兼顧伸展與輕度鍛鍊的溫和課程。',
+    tags:['Gentle Flow','溫柔型','身體導向'], scores:[5.0,2.5,2.5,4.0] },
+
+  // ─── Caca ──────────────────────
+  { teacher:'Caca', short:'主題課', course:'主題課（Yoga Focus）',
+    desc:'希望讓大家「知其然也知其所以然」，課程包含詳細的內容講解與細節討論，適合初學者也適合與流動課搭配學習。「不勉強身體，選擇適合你的練習」，各有課題與收穫。',
+    tags:['Yoga Focus','詳細解說','全階段'], scores:[5.0,5.0,3.5,4.5] },
+  { teacher:'Caca', short:'雕塑瑜伽', course:'雕塑瑜伽',
+    desc:'結合瑜伽動作與肌力訓練概念，以流汗為目標，系統性地鍛鍊全身線條。著重身體各部位的精確啟動，在燃燒的過程中讓體態逐漸雕塑成形。',
+    tags:['雕塑','身體導向','流汗型'], scores:[2.5,5.0,2.5,5.0] },
+
+  // ─── Cher ──────────────────────
+  { teacher:'Cher', short:'療癒瑜伽', course:'療癒瑜伽',
+    desc:'從最基礎的覺知開始，透過呼吸、節奏與細緻引導，讓身體慢慢打開、神經逐漸放鬆，感受「真正的休息」。不是追求體位的完成，而是回到身體本質的過程，讓身體在正確引導下願意慢慢打開。',
+    tags:['療癒','呼吸引導','深度放鬆'], scores:[9.5,1.5,9.5,1.5] },
+
+  // ─── Chloe ─────────────────────
+  { teacher:'Chloe', short:'基礎瑜伽', course:'基礎瑜伽',
+    desc:'「先穩定，再活動」，將有意識的呼吸帶入體位練習。增加肌肉力量、提升關節活度，同時建立身心的覺察能力與自信心。不求快，講求動作的正確啟動順序。',
+    tags:['Basic Yoga','初學者友善','呼吸覺察'], scores:[5.5,4.0,2.5,2.0] },
+  { teacher:'Chloe', short:'陰瑜伽', course:'陰瑜伽',
+    desc:'在每個體位中長時間停留，搭配深層呼吸讓身體自然放鬆。Chloe 以溫暖而細緻的引導帶領學員感受身體內在，在靜止中發現更多的自己。',
+    tags:['Yin Yoga','深層放鬆','內在覺察'], scores:[9.0,6.5,7.5,5.5] },
+
+  // ─── Jiajia ────────────────────
+  { teacher:'Jiajia', short:'晨間輪', course:'晨間瑜伽輪',
+    desc:'以較多流動串連，搭配瑜伽輪輔助開展全身，幫助身體覺醒與循環打開。帶著精神與空間感，是讓人充滿能量展開一天的早晨課程。',
+    tags:['Yoga Wheel','晨間能量','流動串連'], scores:[3.5,7.0,3.5,4.5] },
+  { teacher:'Jiajia', short:'晚安輪', course:'晚安瑜伽輪',
+    desc:'節奏放慢，著重筋膜延展，讓整天積累的緊繃有出口，放下肩上不屬於你的重擔。課後身體沉穩、呼吸入深，很適合放鬆、準備入睡。',
+    tags:['Yoga Wheel','晚間放鬆','筋膜延展'], scores:[7.0,3.0,4.5,3.0] },
+  { teacher:'Jiajia', short:'古典哈達', course:'古典哈達',
+    desc:'以古典哈達的傳統方式練習，在呼吸與體位的配合中讓身心平衡。課程節奏適中，兼顧力量與延展，是扎實建立練習基礎的好選擇。',
+    tags:['古典哈達','均衡練習','扎實基礎'], scores:[5.0,5.0,4.5,5.0] },
+  { teacher:'Jiajia', short:'阿斯坦加', course:'阿斯坦加入門',
+    desc:'以入門的方式接觸阿斯坦加瑜伽的動態序列，在流汗中感受身體的力量與穩定。適合想挑戰有強度但有系統的瑜伽練習的學員。',
+    tags:['Ashtanga','流汗型','有系統'], scores:[2.0,5.5,4.0,4.5] },
+  { teacher:'Jiajia', short:'輕流動', course:'輕流動',
+    desc:'以流動的方式將動作串連，節奏輕快而連貫，帶著熱情與活力讓身體在流動中感受能量。偏向身體層面的練習，有一定的流汗強度。',
+    tags:['Flow','流汗型','活力'], scores:[2.0,7.0,3.0,4.0] },
+
+  // ─── Lany ──────────────────────
+  { teacher:'Lany', short:'頌缽', course:'頌缽音療',
+    desc:'在頌缽的聲頻振動中，讓身體自然放鬆、神經系統平靜下來。靜躺接收音療能量，是最深層的靜心體驗，不需要任何瑜伽基礎即可參與。',
+    tags:['頌缽音療','聲音療癒','零基礎可'], scores:[10.0,1.0,10.0,1.0] },
+
+  // ─── Sisi ──────────────────────
+  { teacher:'Sisi', short:'輕流動', course:'輕流動（Gentle Flow）',
+    desc:'以動作連結的過程帶著呼吸進入身體內在，感受安定的心流狀態。溫和但連貫的序列，讓身體慢慢甦醒、整合，找到屬於自己的節奏。',
+    tags:['Gentle Flow','心流','溫和流動'], scores:[2.5,3.5,5.0,2.5] },
+  { teacher:'Sisi', short:'瑜伽提斯', course:'瑜伽提斯（Yogalates）',
+    desc:'從皮拉提斯的核心訓練出發，建立不容易被推倒的身體與意志。後段加入深層伸展，讓肌肉與筋膜慢慢放鬆，把身體與心安放回適合的位置。',
+    tags:['Yogalates','核心訓練','深層伸展'], scores:[4.5,6.5,3.0,5.5] },
+  { teacher:'Sisi', short:'哈達瑜伽', course:'哈達瑜伽',
+    desc:'以哈達序列為基礎，帶著明確的節奏與力量引導，讓身體充分活動、燃燒。著重身體的正確啟動，在流汗的過程中建立紮實的體位基礎。',
+    tags:['Hatha','身體導向','有強度'], scores:[2.5,7.5,3.0,5.0] },
+  { teacher:'Sisi', short:'瑜伽輪', course:'瑜伽輪',
+    desc:'搭配瑜伽輪進行動態流動，輪作為輔助工具幫助身體進入更深的體位，同時帶動核心穩定。節奏偏快，具有一定的流汗強度與挑戰感。',
+    tags:['Yoga Wheel','流汗型','身體導向'], scores:[3.0,7.5,3.5,5.0] },
+  { teacher:'Sisi', short:'瑜伽伸展', course:'瑜伽伸展',
+    desc:'以動態伸展為主，在有節奏的引導下讓身體充分延展與活化。課程兼顧肌力啟動與伸展，激勵練習者在每個動作中給自己多一點的挑戰。',
+    tags:['瑜伽伸展','身體導向','有強度'], scores:[3.5,7.0,3.0,5.5] },
+
+  // ─── 西卡 ──────────────────────
+  { teacher:'西卡', short:'溫和流動', course:'溫和流動與喚醒',
+    desc:'適合早晨的溫和流動練習，在順著呼吸的節奏中延展、喚醒身體。不急、不快，讓身體在流動的瑜伽中醒來。搭配卡牌引導，幫助連結當下身心狀態。「從容安然，長出脊椎。」',
+    tags:['Gentle Flow','早晨喚醒','抽卡牌'], scores:[5.5,5.5,6.5,3.5] },
+  { teacher:'西卡', short:'瑜伽提斯', course:'瑜伽提斯（Yogalates）',
+    desc:'從皮拉提斯的核心訓練出發，建立不容易被推倒的身體與意志。後段加入深層伸展，讓肌肉與筋膜慢慢放鬆，把身體與心安放回適合的位置，建立安全穩定長遠的練習。',
+    tags:['Yogalates','核心訓練','力量強化'], scores:[2.0,5.5,5.0,6.5] },
+  { teacher:'西卡', short:'瑜伽伸展', course:'瑜伽伸展',
+    desc:'在舒緩的伸展練習中，讓身體和心靈都得到放鬆與滋養。搭配卡牌引導，幫助練習者連結當下的狀態，在每次呼吸與停留中更深入地聆聽自己的身體。',
+    tags:['瑜伽伸展','心靈滋養','抽卡牌'], scores:[8.5,6.5,7.5,5.5] },
+
+  // ─── 鈺瑩 ──────────────────────
+  { teacher:'鈺瑩', short:'瑜珈輪', course:'瑜珈輪',
+    desc:'搭配瑜珈輪，以溫和延展為主，幫助練習者在輪的支撐下安全地開展身體。非常適合初學者，在放鬆中感受身體的可能性，聆聽內在真正的需要。',
+    tags:['Yoga Wheel','初學者友善','溫和伸展'], scores:[9.0,5.0,4.5,1.5] },
+
+  // ─── 顏顏 ──────────────────────
+  { teacher:'顏顏', short:'哈達', course:'哈達瑜伽',
+    desc:'藉由體位法讓呼吸輔助身體放鬆，帶著覺察去觀察，給身體一點耐心與準備，讓身體慢慢處在一個好的狀態，是身心同步深化的練習。',
+    tags:['Hatha Yoga','呼吸覺察','身心整合'], scores:[6.0,4.5,5.0,4.5] },
+  { teacher:'顏顏', short:'修復', course:'正念修復瑜伽',
+    desc:'搭配輔具以安穩練習，透過呼吸停留時間深層放鬆，緩解累積的緊繃壓力。藉由深入觀察增加對自身覺知，靜下心聚焦身體內在感受，在平靜中找到修復的力量。',
+    tags:['Restorative','正念','深層放鬆'], scores:[9.0,2.0,5.5,1.5] },
+  { teacher:'顏顏', short:'香氛伸展', course:'香氛瑜伽伸展',
+    desc:'在香氛之中舒緩練習，以陽瑜伽為主，搭配調息讓身心更加放鬆。讓我們打開嗅覺感官，讓身體在香氛裡逐漸放鬆下來，透過與身體對話回到內在的平靜安定。',
+    tags:['香氛','陽瑜伽','感官放鬆'], scores:[7.5,3.0,6.0,3.0] },
+  { teacher:'顏顏', short:'瑜伽輪', course:'瑜伽輪',
+    desc:'搭配瑜伽輪，以溫柔的節奏帶領練習者在輔具的支持下慢慢開展身體。課程步調舒緩，練習者可依自己的狀態進退，是一堂輕鬆但有深度的均衡練習。',
+    tags:['Yoga Wheel','溫柔型','均衡練習'], scores:[5.5,2.5,5.0,4.5] },
+  { teacher:'顏顏', short:'哈達2', course:'哈達瑜伽（溫和）',
+    desc:'以哈達為基礎，強調放鬆與覺察，而非強度。透過溫柔的節奏引導呼吸進入每個體位，幫助身體在安心的狀態下找到平衡，是身心同步放鬆的好選擇。',
+    tags:['Hatha Yoga','溫柔型','身心放鬆'], scores:[5.5,2.5,5.0,4.5] },
+];
+
+// ─── AXES ─────────────────────────────────────
+const AXES = [
+  { left:'想流汗',   right:'想伸展與穩定停留' },
+  { left:'溫柔型',   right:'激勵嚴格型'        },
+  { left:'身體導向', right:'心靈導向'           },
+  { left:'適合初學', right:'適合進階挑戰'       },
+];
+
+// ─── STATE ────────────────────────────────────
+let axisX = 0, axisY = 1, selected = null, dimmedTeacher = null;
+
+// ─── CHART DIMENSIONS ────────────────────────
+const SVG_W = 660, SVG_H = 530;
+const PAD = { left: 90, right: 32, top: 50, bottom: 72 };
+const CW = SVG_W - PAD.left - PAD.right;
+const CH = SVG_H - PAD.top  - PAD.bottom;
+const CX0 = PAD.left, CY0 = PAD.top;
+const CX1 = CX0 + CW, CY1 = CY0 + CH;
+const MX = CX0 + CW / 2, MY = CY0 + CH / 2;
+const R = 20;
+
+function scoreToPoint(sx, sy) {
+  return { x: CX0 + (sx / 10) * CW, y: CY1 - (sy / 10) * CH };
+}
+
+// ─── COLLISION AVOIDANCE ──────────────────────
+function avoidCollisions(pts, minDist, iters) {
+  for (let k = 0; k < iters; k++) {
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[j].x - pts[i].x, dy = pts[j].y - pts[i].y;
+        const d2 = dx*dx + dy*dy;
+        if (d2 < minDist*minDist && d2 > 0.01) {
+          const d = Math.sqrt(d2), push = (minDist - d) / 2 * 0.55;
+          const nx = dx/d, ny = dy/d;
+          pts[i].x -= nx*push; pts[i].y -= ny*push;
+          pts[j].x += nx*push; pts[j].y += ny*push;
+        }
+      }
+    }
+    pts.forEach(p => {
+      p.x = Math.max(CX0+R+2, Math.min(CX1-R-2, p.x));
+      p.y = Math.max(CY0+R+2, Math.min(CY1-R-2, p.y));
+    });
+  }
+}
+
+// ─── SVG HELPERS ──────────────────────────────
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function svgTxt(parent, x, y, str, size, fill, anchor, opts={}) {
+  const e = document.createElementNS(NS, 'text');
+  e.setAttribute('x', x); e.setAttribute('y', y);
+  e.setAttribute('text-anchor', anchor||'middle');
+  e.setAttribute('font-size', size); e.setAttribute('fill', fill);
+  e.setAttribute('font-family', 'Georgia, serif');
+  if (opts.weight)    e.setAttribute('font-weight', opts.weight);
+  if (opts.transform) e.setAttribute('transform', opts.transform);
+  e.textContent = str;
+  parent.appendChild(e);
+}
+
+// ─── DIM HELPERS ──────────────────────────────
+function dimOthers(teacher) {
+  const svg = document.getElementById('chart-svg');
+  svg.querySelectorAll('.teacher-dot').forEach(d =>
+    d.setAttribute('opacity', d.dataset.teacher === teacher ? '1' : '0.15'));
+  svg.querySelectorAll('.conn-line').forEach(l =>
+    l.setAttribute('opacity', l.dataset.teacher === teacher ? '0.55' : '0.05'));
+  document.querySelectorAll('.legend-item').forEach(it =>
+    it.classList.toggle('dimmed', it.dataset.teacher !== teacher));
+}
+function undim() {
+  const svg = document.getElementById('chart-svg');
+  svg.querySelectorAll('.teacher-dot').forEach(d => d.removeAttribute('opacity'));
+  svg.querySelectorAll('.conn-line').forEach(l => l.setAttribute('opacity','0.35'));
+  document.querySelectorAll('.legend-item').forEach(it => it.classList.remove('dimmed'));
+}
+
+// ─── AXIS PICKER ──────────────────────────────
+function pickAxis(which, idx, btn) {
+  if (which==='x' && idx===axisY) return;
+  if (which==='y' && idx===axisX) return;
+  if (which==='x') { axisX=idx; document.querySelectorAll('#x-row .axis-btn').forEach(b=>b.classList.remove('active')); }
+  else             { axisY=idx; document.querySelectorAll('#y-row .axis-btn').forEach(b=>b.classList.remove('active')); }
+  btn.classList.add('active');
+  updateDisabled();
+  render();
+}
+function updateDisabled() {
+  document.querySelectorAll('#x-row .axis-btn').forEach(b=>{ b.disabled=(parseInt(b.dataset.idx)===axisY); });
+  document.querySelectorAll('#y-row .axis-btn').forEach(b=>{ b.disabled=(parseInt(b.dataset.idx)===axisX); });
+}
+
+// ─── RENDER ───────────────────────────────────
+function render() {
+  const svg = document.getElementById('chart-svg');
+  svg.innerHTML = '';
+
+  // Defs
+  const defs = el('defs',{},svg);
+  const mk = el('marker',{id:'arr',markerWidth:'7',markerHeight:'7',refX:'3.5',refY:'3.5',orient:'auto'},defs);
+  el('polygon',{points:'0,0 7,3.5 0,7',fill:'#C5BAB0'},mk);
+
+  // Quadrant fills
+  el('rect',{x:CX0,y:CY0,width:CW/2,height:CH/2,fill:'#FDFAF7'},svg);
+  el('rect',{x:MX, y:CY0,width:CW/2,height:CH/2,fill:'#F7FAFA'},svg);
+  el('rect',{x:CX0,y:MY, width:CW/2,height:CH/2,fill:'#FAF7FA'},svg);
+  el('rect',{x:MX, y:MY, width:CW/2,height:CH/2,fill:'#F7FAFD'},svg);
+
+  // Border + dashed lines
+  el('rect',{x:CX0,y:CY0,width:CW,height:CH,fill:'none',stroke:'#D4C5B8','stroke-width':'1'},svg);
+  el('line',{x1:MX,y1:CY0,x2:MX,y2:CY1,stroke:'#D4C5B8','stroke-width':'1','stroke-dasharray':'4 4'},svg);
+  el('line',{x1:CX0,y1:MY,x2:CX1,y2:MY,stroke:'#D4C5B8','stroke-width':'1','stroke-dasharray':'4 4'},svg);
+
+  // Transparent background — tap outside to clear dim
+  const bgRect = el('rect',{x:CX0,y:CY0,width:CW,height:CH,fill:'transparent',style:'cursor:default'},svg);
+  bgRect.addEventListener('click', () => {
+    dimmedTeacher = null; selected = null; undim();
+    document.getElementById('info-panel').innerHTML = '<div class="info-placeholder">點擊圓點，查看課程介紹</div>';
+  });
+
+  // X axis
+  const axLY = SVG_H - 36;
+  el('line',{x1:CX0,y1:axLY,x2:CX1-4,y2:axLY,stroke:'#C5BAB0','stroke-width':'0.8','marker-end':'url(#arr)'},svg);
+  el('line',{x1:CX1,y1:axLY,x2:CX0+4,y2:axLY,stroke:'#C5BAB0','stroke-width':'0.8','marker-end':'url(#arr)'},svg);
+  const ax = AXES[axisX];
+  svgTxt(svg, CX0+4, axLY+16, ax.left,  '11','#9A8C7E','start');
+  svgTxt(svg, CX1-4, axLY+16, ax.right, '11','#9A8C7E','end');
+
+  // Y axis
+  const axLX = 18, lblX = 8;
+  el('line',{x1:axLX,y1:CY1,  x2:axLX,y2:CY0+4,stroke:'#C5BAB0','stroke-width':'0.8','marker-end':'url(#arr)'},svg);
+  el('line',{x1:axLX,y1:CY0,  x2:axLX,y2:CY1-4,stroke:'#C5BAB0','stroke-width':'0.8','marker-end':'url(#arr)'},svg);
+  const ay = AXES[axisY];
+  svgTxt(svg, lblX, CY1-18, ay.left,  '10','#9A8C7E','middle',{ transform:`rotate(-90,${lblX},${CY1-18})` });
+  svgTxt(svg, lblX, CY0+18, ay.right, '10','#9A8C7E','middle',{ transform:`rotate(-90,${lblX},${CY0+18})` });
+
+  // Positions + collision avoidance
+  const pts = courses.map(c => scoreToPoint(c.scores[axisX], c.scores[axisY]));
+  avoidCollisions(pts, R * 2.35, 40);
+
+  // Connecting lines (same teacher)
+  const groups = {};
+  courses.forEach((c,i) => { if(!groups[c.teacher]) groups[c.teacher]=[]; groups[c.teacher].push(i); });
+  Object.entries(groups).forEach(([teacher, idxs]) => {
+    if (idxs.length < 2) return;
+    const color = TEACHERS[teacher];
+    for (let k = 0; k < idxs.length-1; k++) {
+      const a=pts[idxs[k]], b=pts[idxs[k+1]];
+      el('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+        stroke:color,'stroke-width':'1.2','stroke-dasharray':'4 3',
+        opacity:'0.35',class:'conn-line','data-teacher':teacher},svg);
+    }
+  });
+
+  // Dots
+  courses.forEach((c,i) => {
+    const {x,y} = pts[i];
+    const color = TEACHERS[c.teacher];
+    const isSel = selected === i;
+
+    const g = el('g',{style:'cursor:pointer',class:'teacher-dot','data-teacher':c.teacher},svg);
+    if (isSel) el('circle',{cx:x,cy:y,r:R+7,fill:'none',stroke:color,'stroke-width':'1.5',opacity:'0.4'},g);
+    el('circle',{cx:x,cy:y,r:isSel?R+2:R,
+      fill:isSel?color:color+'CC',stroke:color,'stroke-width':isSel?'1.5':'1'},g);
+    svgTxt(g,x,y-2,  c.teacher,'8.5','#FFFFFF','middle',{weight:'500'});
+    svgTxt(g,x,y+10, c.short,  '7.5','rgba(255,255,255,0.85)','middle');
+
+    // Click — selects AND persists dim (works on both desktop & touch)
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selected = i;
+      dimmedTeacher = c.teacher;
+      showInfo(i);
+      render(); // re-render re-applies dimmedTeacher at end
+    });
+    // Desktop hover — temporary override
+    g.addEventListener('mouseenter', () => dimOthers(c.teacher));
+    g.addEventListener('mouseleave', () => {
+      if (dimmedTeacher) dimOthers(dimmedTeacher); // restore click-dim
+      else undim();
+    });
+  });
+
+  // Re-apply persistent dim after render (keeps state after axis switch)
+  if (dimmedTeacher) dimOthers(dimmedTeacher);
+}
+
+// ─── INFO PANEL ───────────────────────────────
+function showInfo(idx) {
+  const c=courses[idx], color=TEACHERS[c.teacher];
+  document.getElementById('info-panel').innerHTML = `
+    <div class="info-content">
+      <div class="info-top">
+        <span class="info-teacher" style="color:${color}">${c.teacher}</span>
+        <span class="info-dot">·</span>
+        <span class="info-course">${c.course}</span>
+      </div>
+      <div class="info-desc">${c.desc}</div>
+      <div class="info-tags">${c.tags.map(t=>`<span class="info-tag">${t}</span>`).join('')}</div>
+    </div>`;
+}
+
+// ─── LEGEND ───────────────────────────────────
+function buildLegend() {
+  const lg = document.getElementById('legend');
+  Object.entries(TEACHERS).forEach(([name,color]) => {
+    const item = document.createElement('div');
+    item.className='legend-item'; item.dataset.teacher=name;
+    item.innerHTML=`<div class="legend-dot" style="background:${color}"></div>${name}`;
+    item.addEventListener('mouseenter', () => dimOthers(name));
+    item.addEventListener('mouseleave', () => { if(dimmedTeacher) dimOthers(dimmedTeacher); else undim(); });
+    item.addEventListener('click', () => {
+      const idx=courses.findIndex(c=>c.teacher===name);
+      if(idx>=0){ dimmedTeacher=name; selected=idx; showInfo(idx); render(); }
+    });
+    lg.appendChild(item);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────
+updateDisabled();
+buildLegend();
+render();
+</script>
+</body>
+</html>
