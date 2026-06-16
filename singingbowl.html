@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>夏日小歇公益頌缽｜山所・沐光</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
   :root {
     --sage:       #6B8C6B;
@@ -14,19 +14,19 @@
     --sage-pale:  #EDF4ED;
     --earth:      #7A5C3E;
     --earth-light:#C8A882;
-    --earth-pale: #F7F0E8;
-    --text:       #2D2D2D;
-    --text-mid:   #4A4A4A;
-    --text-soft:  #7A7A7A;
-    --cream:      #FAFAF7;
+    --earth-pale: #F5EEE6;
+    --text:       #2A2A2A;
+    --text-mid:   #484848;
+    --text-soft:  #888;
+    --cream:      #F8F5F0;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Noto Sans TC', 'Arial', sans-serif;
+    font-family: 'Noto Sans TC', sans-serif;
     color: var(--text);
-    background: #E8E3DC;
+    background: #E5DFD8;
     line-height: 1.9;
   }
 
@@ -34,152 +34,258 @@
     max-width: 780px;
     margin: 0 auto;
     background: var(--cream);
-    box-shadow: 0 8px 60px rgba(0,0,0,0.12);
-  }
-
-  /* ══ HERO ══ */
-  .hero {
-    position: relative;
-    background: linear-gradient(170deg, #2E4A2E 0%, #4A6A4A 50%, #6A8A5A 100%);
-    color: white;
-    text-align: center;
-    padding: 88px 48px 100px;
+    box-shadow: 0 12px 64px rgba(0,0,0,0.14);
     overflow: hidden;
   }
 
+  /* ══════════════════════════════
+     HERO — 弥散光風格
+  ══════════════════════════════ */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    background: #F0ECE5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 44px 48px;
+    overflow: hidden;
+  }
+
+  /* 噪點紋理疊加 */
   .hero::before {
     content: '';
     position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255,255,255,0.05) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.6;
+    z-index: 0;
+    pointer-events: none;
   }
 
-  /* soft wave into teacher block */
-  .hero::after {
-    content: '';
+  /* 光球 1 — 橄欖綠 */
+  .orb-1 {
     position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 64px;
-    background: #F2EDE8;
-    clip-path: ellipse(55% 100% at 50% 100%);
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%,
+      rgba(140,180,130,0.72) 0%,
+      rgba(140,180,130,0.30) 45%,
+      transparent 70%);
+    filter: blur(48px);
+    top: -80px; left: -100px;
+    z-index: 0;
+  }
+
+  /* 光球 2 — 暖琥珀 */
+  .orb-2 {
+    position: absolute;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 55% 50%,
+      rgba(210,165,90,0.60) 0%,
+      rgba(210,165,90,0.22) 50%,
+      transparent 70%);
+    filter: blur(56px);
+    bottom: 60px; right: -80px;
+    z-index: 0;
+  }
+
+  /* 光球 3 — 玫瑰粉 */
+  .orb-3 {
+    position: absolute;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%,
+      rgba(195,140,130,0.45) 0%,
+      rgba(195,140,130,0.15) 50%,
+      transparent 70%);
+    filter: blur(44px);
+    top: 35%; right: 5%;
+    z-index: 0;
+  }
+
+  .hero-top {
+    position: relative; z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
   }
 
   .hero-brand {
-    font-size: 12px;
-    letter-spacing: 5px;
-    opacity: 0.65;
-    margin-bottom: 36px;
+    font-size: 11px;
+    letter-spacing: 3.5px;
+    color: var(--text-soft);
+    line-height: 1.8;
   }
 
   .hero-tag {
-    display: inline-block;
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 20px;
-    padding: 4px 18px;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 3px;
-    opacity: 0.8;
-    margin-bottom: 22px;
+    color: var(--sage);
+    border: 1px solid var(--sage-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .hero-center {
+    position: relative; z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 0 40px;
+  }
+
+  .hero-title-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 4px;
+    color: var(--text-soft);
+    margin-bottom: 18px;
   }
 
   .hero-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 44px;
-    font-weight: 700;
-    letter-spacing: 6px;
-    line-height: 1.35;
-    margin-bottom: 20px;
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: 8px;
+    color: #7A8C72;
+    margin-bottom: 28px;
+  }
+
+  .hero-title span {
+    display: block;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: var(--text-soft);
+    margin-bottom: 4px;
   }
 
   .hero-sub {
-    font-size: 14px;
-    letter-spacing: 3px;
-    opacity: 0.75;
-  }
-
-  .hero-date-bar {
-    display: inline-flex;
-    gap: 24px;
-    margin-top: 40px;
-    background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(255,255,255,0.20);
-    border-radius: 12px;
-    padding: 13px 32px;
+    font-family: 'Noto Serif TC', serif;
     font-size: 13.5px;
-    letter-spacing: 1.5px;
+    color: var(--text-soft);
+    letter-spacing: 3px;
+    line-height: 1.9;
   }
 
-  /* ══ TEACHER ══ */
+  .hero-bottom {
+    position: relative; z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 24px;
+  }
+
+  .hero-date-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hero-date-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+  }
+
+  .hero-date-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .hero-date-sub {
+    font-size: 11px;
+    color: var(--text-soft);
+    letter-spacing: 1px;
+  }
+
+  .hero-scroll-hint {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-soft);
+    writing-mode: vertical-rl;
+    opacity: 0.5;
+  }
+
+  /* ══════════════════════════════
+     TEACHER
+  ══════════════════════════════ */
   .teacher-block {
     display: grid;
-    grid-template-columns: 260px 1fr;
-    min-height: 370px;
-    background: #F2EDE8;
+    grid-template-columns: 280px 1fr;
+    background: var(--earth-pale);
   }
 
   .teacher-photo {
     overflow: hidden;
-    background: #5A7A5A;
+    background: #D8D0C4;
   }
 
   .teacher-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 15%;
+    object-position: center top;
     display: block;
   }
 
   .teacher-info {
-    padding: 48px 40px 44px;
+    padding: 52px 40px 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
   .teacher-en {
-    font-size: 10px;
-    letter-spacing: 4px;
+    font-size: 9px;
+    letter-spacing: 5px;
     color: var(--sage-mid);
     text-transform: uppercase;
-    margin-bottom: 5px;
-    font-weight: 500;
+    margin-bottom: 6px;
   }
 
   .teacher-name {
     font-family: 'Noto Serif TC', serif;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--text);
-    letter-spacing: 4px;
-    margin-bottom: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 14px;
   }
 
   .teacher-roles {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
   }
 
   .teacher-role-tag {
     display: inline-block;
-    background: rgba(107,140,107,0.10);
     border: 1px solid var(--sage-light);
     border-radius: 20px;
     padding: 3px 13px;
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--sage);
     letter-spacing: 1.5px;
   }
 
   .teacher-dash {
-    width: 20px;
-    height: 1.5px;
+    width: 18px; height: 1px;
     background: var(--earth-light);
     margin-bottom: 20px;
-    border-radius: 2px;
   }
 
   .teacher-bio {
@@ -190,21 +296,63 @@
     letter-spacing: 0.5px;
   }
 
-  /* ══ POEM ══ */
-  .poem-section {
-    background: var(--cream);
-    padding: 72px 80px 60px;
-    text-align: center;
+  /* mobile: 照片完整顯示不裁切 */
+  @media (max-width: 600px) {
+    .teacher-block {
+      grid-template-columns: 1fr;
+    }
+    .teacher-photo {
+      /* 讓圖片自然撐高，完整顯示 */
+      height: auto;
+    }
+    .teacher-photo img {
+      width: 100%;
+      height: auto;
+      object-fit: unset;
+      display: block;
+    }
+    .teacher-info {
+      padding: 40px 28px 40px;
+    }
   }
 
-  .poem-leaf { font-size: 22px; opacity: 0.4; margin-bottom: 28px; }
+  /* ══════════════════════════════
+     POEM
+  ══════════════════════════════ */
+  .poem-section {
+    position: relative;
+    background: var(--cream);
+    padding: 80px 80px 68px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .poem-orb {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(140,175,130,0.18) 0%,
+      transparent 70%);
+    filter: blur(40px);
+    top: -60px; left: -60px;
+    pointer-events: none;
+  }
+
+  .poem-leaf {
+    font-size: 18px;
+    opacity: 0.3;
+    margin-bottom: 32px;
+    position: relative; z-index: 1;
+  }
 
   .poem-text {
     font-family: 'Noto Serif TC', serif;
-    font-size: 16px;
+    font-size: 15.5px;
     color: var(--text-mid);
-    line-height: 2.5;
-    letter-spacing: 1px;
+    line-height: 2.6;
+    letter-spacing: 1.5px;
+    position: relative; z-index: 1;
   }
 
   .poem-text em {
@@ -214,326 +362,405 @@
   }
 
   .poem-dot {
-    width: 4px; height: 4px;
+    width: 3px; height: 3px;
     border-radius: 50%;
     background: var(--sage-light);
-    margin: 28px auto;
+    margin: 32px auto;
+    position: relative; z-index: 1;
   }
 
   .poem-invite {
     font-family: 'Noto Serif TC', serif;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--sage);
-    letter-spacing: 3px;
-    margin-top: 12px;
+    letter-spacing: 4px;
+    position: relative; z-index: 1;
   }
 
-  /* ══ CONTENT ══ */
+  /* ══════════════════════════════
+     CONTENT
+  ══════════════════════════════ */
   .content {
-    padding: 0 72px 72px;
+    padding: 0 72px 80px;
     background: var(--cream);
   }
 
-  /* section label — subtle, not a full divider */
   .sec-label {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-top: 60px;
-    margin-bottom: 22px;
+    padding-top: 64px;
+    margin-bottom: 24px;
   }
 
-  .sec-label-dot {
-    width: 6px; height: 6px;
+  .sec-dot {
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--sage-mid);
     flex-shrink: 0;
   }
 
   .sec-label-text {
-    font-size: 11px;
-    letter-spacing: 4px;
+    font-size: 10px;
+    letter-spacing: 5px;
     color: var(--sage-mid);
     text-transform: uppercase;
     font-weight: 500;
   }
 
-  /* ── activity list ── */
   .intro-text {
-    font-size: 15px;
+    font-size: 14.5px;
     color: var(--text-mid);
     line-height: 2.1;
     letter-spacing: 0.5px;
     margin-bottom: 22px;
   }
 
+  /* activity */
   .activity-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
   }
 
   .activity-list li {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 18px;
-    border-left: 2px solid var(--sage-light);
-    font-size: 15px;
+    gap: 16px;
+    padding: 13px 4px;
+    border-bottom: 1px solid #EAEAE4;
+    font-size: 14.5px;
     color: var(--text-mid);
     letter-spacing: 0.5px;
   }
 
-  .activity-list li .num {
-    font-size: 10px;
+  .activity-list li:first-child { border-top: 1px solid #EAEAE4; }
+
+  .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
     color: var(--sage-mid);
-    font-weight: 500;
     letter-spacing: 1px;
-    min-width: 22px;
+    min-width: 24px;
+    font-style: italic;
   }
 
-  /* ── charity card ── */
+  /* charity */
   .charity-card {
-    background: linear-gradient(135deg, #2E4A2E 0%, #4A6A4A 100%);
-    color: white;
-    border-radius: 16px;
-    padding: 40px 40px 36px;
     position: relative;
+    background: linear-gradient(145deg, #2C4830 0%, #3E6444 55%, #5A7A52 100%);
+    border-radius: 18px;
+    padding: 44px 44px 40px;
+    color: white;
     overflow: hidden;
-    margin-top: 4px;
   }
 
-  .charity-card::after {
-    content: '🌿';
+  /* 光球裝飾在 charity 卡片上 */
+  .charity-card::before {
+    content: '';
     position: absolute;
-    right: 28px; top: 24px;
-    font-size: 56px;
-    opacity: 0.10;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(255,255,255,0.08) 0%,
+      transparent 70%);
+    filter: blur(30px);
+    top: -60px; right: -40px;
     pointer-events: none;
   }
 
   .charity-card-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     opacity: 0.95;
+    position: relative; z-index: 1;
   }
 
   .charity-card-text {
-    font-size: 14px;
-    line-height: 2.1;
-    opacity: 0.85;
+    font-size: 13.5px;
+    line-height: 2.2;
+    opacity: 0.82;
     letter-spacing: 0.5px;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
+    position: relative; z-index: 1;
   }
 
   .charity-link-btn {
     display: inline-block;
-    background: rgba(255,255,255,0.14);
-    border: 1px solid rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.40);
     border-radius: 30px;
-    padding: 9px 26px;
+    padding: 10px 28px;
     color: white;
-    font-size: 13px;
-    letter-spacing: 2px;
+    font-size: 12.5px;
+    letter-spacing: 2.5px;
     text-decoration: none;
-    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(4px);
+    background: rgba(255,255,255,0.08);
+    transition: all 0.25s;
+    position: relative; z-index: 1;
   }
 
   .charity-link-btn:hover {
-    background: rgba(255,255,255,0.22);
-    border-color: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.65);
   }
 
-  .charity-link-btn-arrow {
-    opacity: 0.65;
-    margin-left: 6px;
-    font-size: 11px;
-  }
+  .charity-arrow { opacity: 0.6; margin-left: 7px; font-size: 10px; }
 
-  /* ── time cards ── */
+  /* time */
   .time-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
     margin-top: 4px;
   }
 
   .time-card {
     background: white;
-    border: 1px solid #E4EDE4;
+    border: 1px solid #E8E8E0;
     border-radius: 12px;
     padding: 24px 22px;
   }
 
-  .time-card-label {
-    font-size: 10px;
+  .time-label {
+    font-size: 9px;
     color: var(--sage-mid);
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-weight: 500;
   }
 
-  .time-card-value {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 22px;
-    font-weight: 700;
+  .time-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 400;
     color: var(--text);
     letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 8px;
   }
 
-  .time-card-sub {
-    font-size: 12.5px;
+  .time-sub {
+    font-size: 12px;
     color: var(--text-soft);
-    margin-top: 5px;
     letter-spacing: 0.5px;
   }
 
-  /* ── prepare ── */
+  /* prepare */
   .prepare-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
     margin-top: 4px;
   }
 
   .prepare-list li {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 15px;
+    gap: 14px;
+    font-size: 14.5px;
     color: var(--text-mid);
-    padding: 11px 16px;
+    padding: 12px 4px;
+    border-bottom: 1px solid #EAEAE4;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid #EEEEE8;
   }
 
-  .prepare-list li:last-child { border-bottom: none; }
-
-  .p-mark { color: var(--sage-mid); font-size: 14px; }
+  .prepare-list li:first-child { border-top: 1px solid #EAEAE4; }
+  .p-mark { color: var(--sage-light); font-size: 12px; }
 
   .prepare-foot {
     font-family: 'Noto Serif TC', serif;
-    font-size: 14px;
+    font-size: 13.5px;
     color: var(--text-soft);
-    margin-top: 20px;
-    letter-spacing: 1px;
-    line-height: 2.0;
+    margin-top: 28px;
+    letter-spacing: 2px;
+    line-height: 2.2;
     text-align: center;
     font-style: italic;
   }
 
-  /* ══ BLESSING ══ */
+  /* ══════════════════════════════
+     BLESSING — 弥散光
+  ══════════════════════════════ */
   .blessing-section {
-    background: var(--earth-pale);
-    padding: 68px 80px;
+    position: relative;
+    background: #EDE8E0;
+    padding: 88px 80px 84px;
     text-align: center;
+    overflow: hidden;
+  }
+
+  .blessing-orb-a {
+    position: absolute;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(145,180,135,0.35) 0%,
+      transparent 70%);
+    filter: blur(50px);
+    top: -80px; left: -60px;
+    pointer-events: none;
+  }
+
+  .blessing-orb-b {
+    position: absolute;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(200,155,90,0.28) 0%,
+      transparent 70%);
+    filter: blur(44px);
+    bottom: -60px; right: -40px;
+    pointer-events: none;
   }
 
   .blessing-text {
     font-family: 'Noto Serif TC', serif;
     font-size: 15px;
-    color: var(--earth);
-    line-height: 2.8;
-    letter-spacing: 1.5px;
+    color: #5A4A3A;
+    line-height: 3.0;
+    letter-spacing: 2px;
+    position: relative; z-index: 1;
   }
 
-  /* ══ REGISTER ══ */
+  /* ══════════════════════════════
+     REGISTER
+  ══════════════════════════════ */
   .register-wrap {
     background: var(--cream);
-    padding: 60px 64px 64px;
+    padding: 68px 64px 72px;
     text-align: center;
   }
 
   .register-note {
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--text-soft);
-    margin-bottom: 24px;
-    letter-spacing: 0.5px;
-    line-height: 2.0;
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+    line-height: 2.1;
   }
 
   .register-btn {
     display: inline-block;
-    background: linear-gradient(135deg, #2E4A2E, #4A6A4A);
+    background: linear-gradient(135deg, #2C4830, #3E6444);
     color: white;
     font-family: 'Noto Serif TC', serif;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
-    letter-spacing: 5px;
-    padding: 17px 52px;
+    letter-spacing: 6px;
+    padding: 18px 56px;
     border-radius: 50px;
     text-decoration: none;
-    box-shadow: 0 4px 24px rgba(46,74,46,0.28);
-    transition: all 0.25s;
+    box-shadow: 0 6px 28px rgba(44,72,48,0.25);
+    transition: all 0.3s;
   }
 
   .register-btn:hover {
-    background: linear-gradient(135deg, #1E3A1E, #3A5A3A);
-    box-shadow: 0 6px 32px rgba(46,74,46,0.38);
+    background: linear-gradient(135deg, #1E3422, #2C4830);
+    box-shadow: 0 8px 36px rgba(44,72,48,0.35);
     transform: translateY(-2px);
+    letter-spacing: 7px;
   }
 
-  /* ══ FOOTER ══ */
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
   .footer {
-    background: #2E4A2E;
-    color: rgba(255,255,255,0.7);
+    background: #262E24;
+    color: rgba(255,255,255,0.55);
     text-align: center;
-    padding: 40px 48px;
-    font-size: 12px;
-    letter-spacing: 2.5px;
-    line-height: 2.2;
+    padding: 44px 48px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    line-height: 2.4;
   }
 
   .footer-brand {
     font-family: 'Noto Serif TC', serif;
-    font-size: 17px;
-    color: white;
-    letter-spacing: 5px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.90);
+    letter-spacing: 6px;
     margin-bottom: 4px;
   }
 
-  /* ══ RESPONSIVE ══ */
+  .footer-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
   @media (max-width: 600px) {
-    .hero { padding: 64px 28px 88px; }
-    .hero-title { font-size: 34px; }
-    .hero-date-bar { flex-direction: column; gap: 10px; padding: 14px 24px; }
+    .hero {
+      padding: 44px 28px 40px;
+      min-height: 100svh;
+    }
+    .hero-title { font-size: 40px; }
+    .hero-title span { font-size: 22px; }
 
-    /* 老師區塊：左右改上下，照片顯示人臉不被裁切 */
-    .teacher-block { grid-template-columns: 1fr; }
-    .teacher-photo { height: 340px; }
-    .teacher-photo img { object-position: center 10%; }
-
-    .poem-section { padding: 56px 28px 48px; }
-    .content { padding: 0 28px 56px; }
+    .poem-section { padding: 64px 28px 56px; }
+    .content { padding: 0 28px 64px; }
     .time-row { grid-template-columns: 1fr; }
-    .blessing-section { padding: 56px 28px; }
-    .register-wrap { padding: 48px 28px; }
+    .blessing-section { padding: 72px 28px 68px; }
+    .register-wrap { padding: 56px 28px; }
+    .charity-card { padding: 36px 28px 32px; }
   }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- HERO -->
+  <!-- ══ HERO ══ -->
   <section class="hero">
-    <div class="hero-brand">山所・沐光　a place of hills & shine</div>
-    <div class="hero-tag">公益活動</div>
-    <h1 class="hero-title">夏日小歇<br>公益頌缽</h1>
-    <p class="hero-sub">在聲音裡，留一段呼吸給自己。</p>
-    <div class="hero-date-bar">
-      <span>📅 &nbsp;2026.07.19（日）</span>
-      <span>🕓 &nbsp;15:40 – 17:10</span>
+    <div class="orb-1"></div>
+    <div class="orb-2"></div>
+    <div class="orb-3"></div>
+
+    <div class="hero-top">
+      <div class="hero-brand">
+        山所・沐光<br>
+        a place of hills &amp; shine
+      </div>
+      <div class="hero-tag">公益活動</div>
+    </div>
+
+    <div class="hero-center">
+      <div class="hero-title-en">Sound Bath · Summer Rest</div>
+      <h1 class="hero-title">
+        <span>夏日小歇</span>
+        公益頌缽
+      </h1>
+      <p class="hero-sub">在聲音裡，留一段呼吸給自己。</p>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="hero-date-item">
+        <div class="hero-date-label">Date</div>
+        <div class="hero-date-value">2026.07.19</div>
+        <div class="hero-date-sub">Sunday</div>
+      </div>
+      <div class="hero-date-item" style="text-align:center;">
+        <div class="hero-date-label">Time</div>
+        <div class="hero-date-value">15:40</div>
+        <div class="hero-date-sub">— 17:10</div>
+      </div>
+      <div class="hero-scroll-hint">scroll ↓</div>
     </div>
   </section>
 
-  <!-- TEACHER -->
+  <!-- ══ TEACHER ══ -->
   <div class="teacher-block">
     <div class="teacher-photo">
       <img src="DSC00625.jpg" alt="衫綦｜頌缽音療">
@@ -558,8 +785,9 @@
     </div>
   </div>
 
-  <!-- POEM -->
+  <!-- ══ POEM ══ -->
   <section class="poem-section">
+    <div class="poem-orb"></div>
     <div class="poem-leaf">🌿</div>
     <div class="poem-text">
       夏日的腳步太快，思緒也跟著奔忙。<br>
@@ -577,19 +805,17 @@
     <div class="poem-invite">邀請你在聲音裡躺一會兒。</div>
   </section>
 
-  <!-- CONTENT -->
+  <!-- ══ CONTENT ══ -->
   <div class="content">
 
     <!-- 活動內容 -->
     <div class="sec-label">
-      <div class="sec-label-dot"></div>
-      <div class="sec-label-text">活動內容</div>
+      <div class="sec-dot"></div>
+      <div class="sec-label-text">Program</div>
     </div>
-
     <p class="intro-text">
       本次頌缽演奏將以<strong>地、水、火、風、空</strong>五大元素為主軸，結合夏日、山林與土地的意象，透過不同音色與頻率的流動，陪伴身心慢慢回到平衡與安定。
     </p>
-
     <ul class="activity-list">
       <li><span class="num">01</span>精油與呼吸覺察</li>
       <li><span class="num">02</span>靜心引導</li>
@@ -600,10 +826,9 @@
 
     <!-- 公益捐贈 -->
     <div class="sec-label">
-      <div class="sec-label-dot"></div>
-      <div class="sec-label-text">公益捐贈</div>
+      <div class="sec-dot"></div>
+      <div class="sec-label-text">Charity</div>
     </div>
-
     <div class="charity-card">
       <div class="charity-card-title">本次活動所得，全數捐贈</div>
       <div class="charity-card-text">
@@ -611,50 +836,49 @@
         願照顧自己的同時，也將這份溫柔與善意，送回滋養著我們的土地。
       </div>
       <a href="https://www.reforestation.tw/" target="_blank" rel="noopener" class="charity-link-btn">
-        臺灣山林復育協會<span class="charity-link-btn-arrow">↗</span>
+        臺灣山林復育協會<span class="charity-arrow">↗</span>
       </a>
     </div>
 
     <!-- 活動時間 -->
     <div class="sec-label">
-      <div class="sec-label-dot"></div>
-      <div class="sec-label-text">活動時間</div>
+      <div class="sec-dot"></div>
+      <div class="sec-label-text">Time</div>
     </div>
-
     <div class="time-row">
       <div class="time-card">
-        <div class="time-card-label">Date</div>
-        <div class="time-card-value">07 / 19</div>
-        <div class="time-card-sub">2026年　星期日</div>
+        <div class="time-label">Date</div>
+        <div class="time-value">07.19</div>
+        <div class="time-sub">2026年　星期日</div>
       </div>
       <div class="time-card">
-        <div class="time-card-label">Time</div>
-        <div class="time-card-value">15:40</div>
-        <div class="time-card-sub">至 17:10（共 90 分鐘）</div>
+        <div class="time-label">Time</div>
+        <div class="time-value">15:40</div>
+        <div class="time-sub">至 17:10　共 90 分鐘</div>
       </div>
     </div>
 
     <!-- 活動準備 -->
     <div class="sec-label">
-      <div class="sec-label-dot"></div>
-      <div class="sec-label-text">活動準備</div>
+      <div class="sec-dot"></div>
+      <div class="sec-label-text">Prepare</div>
     </div>
-
     <ul class="prepare-list">
       <li><span class="p-mark">✦</span>穿著舒適、方便放鬆的服裝</li>
       <li><span class="p-mark">✦</span>攜帶水壺</li>
       <li><span class="p-mark">✦</span>自己習慣使用的小枕頭</li>
       <li><span class="p-mark">✦</span>一顆願意歇息的心</li>
     </ul>
-
     <div class="prepare-foot">
       獻給每一位想在這個夏天，為自己留下一段呼吸的人。
     </div>
 
   </div>
 
-  <!-- BLESSING -->
+  <!-- ══ BLESSING ══ -->
   <section class="blessing-section">
+    <div class="blessing-orb-a"></div>
+    <div class="blessing-orb-b"></div>
     <div class="blessing-text">
       願我們在聲音中獲得片刻清涼，<br>
       讓愛與感恩緩緩流動，<br>
@@ -662,22 +886,22 @@
     </div>
   </section>
 
-  <!-- REGISTER -->
+  <!-- ══ REGISTER ══ -->
   <div class="register-wrap">
     <p class="register-note">
-      名額有限，歡迎提早報名。<br>
-      報名後將收到確認訊息及活動詳情。
+      名額有限，歡迎提早報名<br>
+      報名後將收到確認訊息及活動詳情
     </p>
-    <a href="https://forms.gle/r1YAD6XCYfU5r8Qv6" target="_blank" rel="noopener" class="register-btn">立即報名</a>
+    <a href="https://forms.gle/r1YAD6XCYfU5r8Qv6" target="_blank" rel="noopener" class="register-btn">
+      立即報名
+    </a>
   </div>
 
-  <!-- FOOTER -->
+  <!-- ══ FOOTER ══ -->
   <footer class="footer">
     <div class="footer-brand">山所・沐光</div>
-    <div>a place of hills & shine</div>
-    <div style="margin-top: 10px; opacity: 0.5; font-size: 11px; letter-spacing: 1px;">
-      夏日小歇｜公益頌缽　2026.07.19
-    </div>
+    <div class="footer-en">a place of hills &amp; shine</div>
+    <div>夏日小歇｜公益頌缽　2026.07.19</div>
   </footer>
 
 </div>
