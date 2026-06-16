@@ -504,8 +504,12 @@
     .hero { padding: 64px 28px 88px; }
     .hero-title { font-size: 34px; }
     .hero-date-bar { flex-direction: column; gap: 10px; padding: 14px 24px; }
+
+    /* 老師區塊：左右改上下，照片顯示人臉不被裁切 */
     .teacher-block { grid-template-columns: 1fr; }
-    .teacher-photo { height: 280px; }
+    .teacher-photo { height: 340px; }
+    .teacher-photo img { object-position: center 10%; }
+
     .poem-section { padding: 56px 28px 48px; }
     .content { padding: 0 28px 56px; }
     .time-row { grid-template-columns: 1fr; }
