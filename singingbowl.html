@@ -8,22 +8,17 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
   :root {
-    --sage:     #6B8C6B;
-    --sage-mid: #8FAF8F;
+    --sage:       #6B8C6B;
+    --sage-mid:   #8FAF8F;
     --sage-light: #C8DBC8;
-    --sage-pale: #EDF4ED;
-    --earth:    #7A5C3E;
-    --earth-light: #C8A882;
+    --sage-pale:  #EDF4ED;
+    --earth:      #7A5C3E;
+    --earth-light:#C8A882;
     --earth-pale: #F7F0E8;
-    --gold:     #B8943A;
-    --gold-pale: #FDF6E3;
-    --sky:      #7AA3B5;
-    --sky-pale: #EBF4F8;
-    --text:     #2D2D2D;
-    --text-mid: #4A4A4A;
-    --text-soft:#6A6A6A;
-    --white:    #FFFFFF;
-    --cream:    #FAFAF7;
+    --text:       #2D2D2D;
+    --text-mid:   #4A4A4A;
+    --text-soft:  #7A7A7A;
+    --cream:      #FAFAF7;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +26,7 @@
   body {
     font-family: 'Noto Sans TC', 'Arial', sans-serif;
     color: var(--text);
-    background: #EEE9E2;
+    background: #E8E3DC;
     line-height: 1.9;
   }
 
@@ -39,109 +34,93 @@
     max-width: 780px;
     margin: 0 auto;
     background: var(--cream);
-    box-shadow: 0 8px 48px rgba(0,0,0,0.13);
+    box-shadow: 0 8px 60px rgba(0,0,0,0.12);
   }
 
-  /* ── HERO ── */
+  /* ══ HERO ══ */
   .hero {
     position: relative;
-    background: linear-gradient(170deg, #3D5C3D 0%, #5A7A5A 45%, #7A9B6A 100%);
+    background: linear-gradient(170deg, #2E4A2E 0%, #4A6A4A 50%, #6A8A5A 100%);
     color: white;
     text-align: center;
-    padding: 80px 48px 72px;
+    padding: 88px 48px 100px;
     overflow: hidden;
   }
 
   .hero::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 60%);
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255,255,255,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 60%);
   }
 
-  /* decorative wave */
+  /* soft wave into teacher block */
   .hero::after {
     content: '';
     position: absolute;
-    bottom: -1px;
-    left: 0; right: 0;
-    height: 56px;
-    background: var(--cream);
+    bottom: -1px; left: 0; right: 0;
+    height: 64px;
+    background: #F2EDE8;
     clip-path: ellipse(55% 100% at 50% 100%);
   }
 
   .hero-brand {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 5px;
-    opacity: 0.75;
-    margin-bottom: 32px;
-    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 36px;
   }
 
   .hero-tag {
     display: inline-block;
-    border: 1px solid rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.4);
     border-radius: 20px;
     padding: 4px 18px;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 3px;
-    opacity: 0.85;
+    opacity: 0.8;
     margin-bottom: 22px;
   }
 
   .hero-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 42px;
+    font-size: 44px;
     font-weight: 700;
     letter-spacing: 6px;
-    margin-bottom: 10px;
-    line-height: 1.3;
-  }
-
-  .hero-divider {
-    width: 40px;
-    height: 1px;
-    background: rgba(255,255,255,0.45);
-    margin: 22px auto;
+    line-height: 1.35;
+    margin-bottom: 20px;
   }
 
   .hero-sub {
-    font-size: 15px;
-    letter-spacing: 2px;
-    opacity: 0.85;
-    line-height: 1.7;
+    font-size: 14px;
+    letter-spacing: 3px;
+    opacity: 0.75;
   }
 
   .hero-date-bar {
     display: inline-flex;
-    gap: 28px;
-    margin-top: 36px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.22);
+    gap: 24px;
+    margin-top: 40px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
     border-radius: 12px;
-    padding: 14px 32px;
-    font-size: 14px;
+    padding: 13px 32px;
+    font-size: 13.5px;
     letter-spacing: 1.5px;
   }
 
-  .hero-date-bar span { opacity: 0.9; }
-  .hero-date-bar strong { font-weight: 500; }
-
-  /* ── TEACHER BLOCK ── */
+  /* ══ TEACHER ══ */
   .teacher-block {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    min-height: 360px;
+    grid-template-columns: 260px 1fr;
+    min-height: 370px;
     background: #F2EDE8;
   }
 
   .teacher-photo {
-    position: relative;
     overflow: hidden;
-    background: #4A6B4A;
+    background: #5A7A5A;
   }
 
   .teacher-photo img {
@@ -153,90 +132,78 @@
   }
 
   .teacher-info {
-    padding: 44px 40px 40px;
+    padding: 48px 40px 44px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0;
   }
 
   .teacher-en {
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 4px;
     color: var(--sage-mid);
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     font-weight: 500;
   }
 
   .teacher-name {
     font-family: 'Noto Serif TC', serif;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--text);
-    letter-spacing: 3px;
-    margin-bottom: 6px;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
   }
 
   .teacher-roles {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
   }
 
   .teacher-role-tag {
     display: inline-block;
-    background: var(--sage-pale);
+    background: rgba(107,140,107,0.10);
     border: 1px solid var(--sage-light);
     border-radius: 20px;
-    padding: 3px 14px;
-    font-size: 12px;
+    padding: 3px 13px;
+    font-size: 11.5px;
     color: var(--sage);
     letter-spacing: 1.5px;
   }
 
-  .teacher-divider {
-    width: 24px;
+  .teacher-dash {
+    width: 20px;
     height: 1.5px;
     background: var(--earth-light);
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     border-radius: 2px;
   }
 
   .teacher-bio {
     font-family: 'Noto Serif TC', serif;
-    font-size: 14px;
+    font-size: 13.5px;
     color: var(--text-mid);
-    line-height: 2.2;
+    line-height: 2.3;
     letter-spacing: 0.5px;
   }
 
-  @media (max-width: 600px) {
-    .teacher-block {
-      grid-template-columns: 1fr;
-    }
-    .teacher-photo {
-      height: 280px;
-    }
-  }
-
-  /* ── POEM ── */
+  /* ══ POEM ══ */
   .poem-section {
-    background: var(--sage-pale);
-    padding: 60px 64px;
+    background: var(--cream);
+    padding: 72px 80px 60px;
     text-align: center;
-    border-top: 3px solid var(--sage-light);
-    border-bottom: 3px solid var(--sage-light);
   }
 
-  .poem-icon { font-size: 28px; margin-bottom: 20px; opacity: 0.6; }
+  .poem-leaf { font-size: 22px; opacity: 0.4; margin-bottom: 28px; }
 
   .poem-text {
     font-family: 'Noto Serif TC', serif;
     font-size: 16px;
     color: var(--text-mid);
-    line-height: 2.4;
+    line-height: 2.5;
     letter-spacing: 1px;
   }
 
@@ -246,267 +213,226 @@
     font-weight: 500;
   }
 
-  .poem-separator {
-    width: 28px;
-    height: 2px;
-    background: var(--sage-mid);
+  .poem-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--sage-light);
     margin: 28px auto;
-    border-radius: 2px;
   }
 
   .poem-invite {
     font-family: 'Noto Serif TC', serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     color: var(--sage);
-    letter-spacing: 2px;
-    margin-top: 8px;
+    letter-spacing: 3px;
+    margin-top: 12px;
   }
 
-  /* ── BODY CONTENT ── */
-  .body { padding: 0 64px 64px; }
+  /* ══ CONTENT ══ */
+  .content {
+    padding: 0 72px 72px;
+    background: var(--cream);
+  }
 
-  /* ── SECTION HEADER ── */
-  .sec-header {
+  /* section label — subtle, not a full divider */
+  .sec-label {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 48px 0 20px;
+    gap: 10px;
+    padding-top: 60px;
+    margin-bottom: 22px;
   }
 
-  .sec-icon {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .sec-icon.green  { background: var(--sage-pale); border: 1.5px solid var(--sage-mid); }
-  .sec-icon.earth  { background: var(--earth-pale); border: 1.5px solid var(--earth-light); }
-  .sec-icon.sky    { background: var(--sky-pale);   border: 1.5px solid var(--sky); }
-  .sec-icon.gold   { background: var(--gold-pale);  border: 1.5px solid var(--gold); }
-
-  .sec-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 2px;
-  }
-
-  .sec-line {
-    flex: 1;
-    height: 1px;
-    background: var(--sage-light);
-    margin-left: 4px;
-  }
-
-  /* ── ABOUT TEXT ── */
-  .about-text {
-    font-size: 15px;
-    color: var(--text-mid);
-    line-height: 2.0;
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-  }
-
-  /* ── ELEMENTS GRID ── */
-  .elements-intro {
-    font-size: 15px;
-    color: var(--text-mid);
-    line-height: 2.0;
-    margin-bottom: 20px;
-  }
-
-  .elements-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .element-card {
-    background: white;
-    border: 1px solid var(--sage-light);
-    border-radius: 10px;
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14.5px;
-    color: var(--text-mid);
-    letter-spacing: 0.5px;
-  }
-
-  .element-card .e-dot {
-    width: 8px; height: 8px;
+  .sec-label-dot {
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--sage-mid);
     flex-shrink: 0;
   }
 
-  /* ── ACTIVITY LIST ── */
+  .sec-label-text {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--sage-mid);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── activity list ── */
+  .intro-text {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 2.1;
+    letter-spacing: 0.5px;
+    margin-bottom: 22px;
+  }
+
   .activity-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .activity-list li {
     display: flex;
     align-items: center;
     gap: 14px;
-    background: white;
-    border-left: 3px solid var(--sage-mid);
-    border-radius: 0 8px 8px 0;
-    padding: 13px 18px;
+    padding: 12px 18px;
+    border-left: 2px solid var(--sage-light);
     font-size: 15px;
     color: var(--text-mid);
     letter-spacing: 0.5px;
   }
 
   .activity-list li .num {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--sage-mid);
     font-weight: 500;
     letter-spacing: 1px;
-    min-width: 24px;
+    min-width: 22px;
   }
 
-  /* ── CHARITY BLOCK ── */
-  .charity-block {
-    background: linear-gradient(135deg, #3D5C3D 0%, #5A7A5A 100%);
+  /* ── charity card ── */
+  .charity-card {
+    background: linear-gradient(135deg, #2E4A2E 0%, #4A6A4A 100%);
     color: white;
-    border-radius: 14px;
-    padding: 36px 36px;
+    border-radius: 16px;
+    padding: 40px 40px 36px;
     position: relative;
     overflow: hidden;
     margin-top: 4px;
   }
 
-  .charity-block::before {
+  .charity-card::after {
     content: '🌿';
     position: absolute;
-    right: 24px; top: 20px;
-    font-size: 60px;
-    opacity: 0.12;
+    right: 28px; top: 24px;
+    font-size: 56px;
+    opacity: 0.10;
+    pointer-events: none;
   }
 
-  .charity-title {
+  .charity-card-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
     opacity: 0.95;
   }
 
-  .charity-org {
-    display: inline-block;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 20px;
-    padding: 4px 16px;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    margin-bottom: 18px;
-  }
-
-  .charity-text {
+  .charity-card-text {
     font-size: 14px;
-    line-height: 2.0;
-    opacity: 0.88;
+    line-height: 2.1;
+    opacity: 0.85;
     letter-spacing: 0.5px;
+    margin-bottom: 28px;
   }
 
-  /* ── INFO CARDS ── */
-  .info-cards {
+  .charity-link-btn {
+    display: inline-block;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 30px;
+    padding: 9px 26px;
+    color: white;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .charity-link-btn:hover {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.55);
+  }
+
+  .charity-link-btn-arrow {
+    opacity: 0.65;
+    margin-left: 6px;
+    font-size: 11px;
+  }
+
+  /* ── time cards ── */
+  .time-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
     margin-top: 4px;
   }
 
-  .info-card {
+  .time-card {
     background: white;
-    border: 1px solid #E0E8E0;
+    border: 1px solid #E4EDE4;
     border-radius: 12px;
     padding: 24px 22px;
   }
 
-  .info-card-label {
-    font-size: 11px;
+  .time-card-label {
+    font-size: 10px;
     color: var(--sage-mid);
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     text-transform: uppercase;
     margin-bottom: 10px;
     font-weight: 500;
   }
 
-  .info-card-value {
+  .time-card-value {
     font-family: 'Noto Serif TC', serif;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text);
     letter-spacing: 1px;
   }
 
-  .info-card-sub {
-    font-size: 13px;
+  .time-card-sub {
+    font-size: 12.5px;
     color: var(--text-soft);
-    margin-top: 4px;
+    margin-top: 5px;
     letter-spacing: 0.5px;
   }
 
-  /* ── PREPARE ── */
+  /* ── prepare ── */
   .prepare-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     margin-top: 4px;
   }
 
   .prepare-list li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     font-size: 15px;
     color: var(--text-mid);
-    padding: 12px 16px;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #E8EEE8;
+    padding: 11px 16px;
     letter-spacing: 0.5px;
+    border-bottom: 1px solid #EEEEE8;
   }
 
-  .prepare-list li .p-mark {
-    color: var(--sage-mid);
-    font-size: 16px;
-    margin-top: 1px;
-  }
+  .prepare-list li:last-child { border-bottom: none; }
 
-  .prepare-note {
+  .p-mark { color: var(--sage-mid); font-size: 14px; }
+
+  .prepare-foot {
+    font-family: 'Noto Serif TC', serif;
     font-size: 14px;
     color: var(--text-soft);
+    margin-top: 20px;
+    letter-spacing: 1px;
+    line-height: 2.0;
+    text-align: center;
     font-style: italic;
-    margin-top: 14px;
-    padding: 12px 18px;
-    background: var(--sage-pale);
-    border-radius: 8px;
-    line-height: 1.8;
-    letter-spacing: 0.5px;
   }
 
-  /* ── BLESSING ── */
+  /* ══ BLESSING ══ */
   .blessing-section {
     background: var(--earth-pale);
-    border-top: 2px solid #DDD0C4;
-    border-bottom: 2px solid #DDD0C4;
-    padding: 56px 64px;
+    padding: 68px 80px;
     text-align: center;
   }
 
@@ -514,82 +440,77 @@
     font-family: 'Noto Serif TC', serif;
     font-size: 15px;
     color: var(--earth);
-    line-height: 2.6;
-    letter-spacing: 1px;
+    line-height: 2.8;
+    letter-spacing: 1.5px;
   }
 
-  /* ── FOOTER ── */
-  .footer {
-    background: #3D5C3D;
-    color: rgba(255,255,255,0.8);
-    text-align: center;
-    padding: 36px 48px;
-    font-size: 13px;
-    letter-spacing: 2px;
-    line-height: 2.0;
-  }
-
-  .footer strong {
-    color: white;
-    font-weight: 500;
-  }
-
-  .footer-brand {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: 4px;
-    margin-bottom: 8px;
-  }
-
-  /* ── REGISTER BTN ── */
+  /* ══ REGISTER ══ */
   .register-wrap {
-    padding: 48px 64px;
-    text-align: center;
     background: var(--cream);
+    padding: 60px 64px 64px;
+    text-align: center;
   }
 
   .register-note {
-    font-size: 14px;
+    font-size: 13.5px;
     color: var(--text-soft);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     letter-spacing: 0.5px;
-    line-height: 1.8;
+    line-height: 2.0;
   }
 
   .register-btn {
     display: inline-block;
-    background: linear-gradient(135deg, #3D5C3D, #5A7A5A);
+    background: linear-gradient(135deg, #2E4A2E, #4A6A4A);
     color: white;
     font-family: 'Noto Serif TC', serif;
     font-size: 16px;
     font-weight: 500;
-    letter-spacing: 4px;
-    padding: 16px 48px;
-    border-radius: 40px;
+    letter-spacing: 5px;
+    padding: 17px 52px;
+    border-radius: 50px;
     text-decoration: none;
-    box-shadow: 0 4px 20px rgba(61,92,61,0.30);
+    box-shadow: 0 4px 24px rgba(46,74,46,0.28);
     transition: all 0.25s;
   }
 
   .register-btn:hover {
-    background: linear-gradient(135deg, #2D4C2D, #4A6A4A);
-    box-shadow: 0 6px 28px rgba(61,92,61,0.40);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #1E3A1E, #3A5A3A);
+    box-shadow: 0 6px 32px rgba(46,74,46,0.38);
+    transform: translateY(-2px);
   }
 
-  /* ── RESPONSIVE ── */
+  /* ══ FOOTER ══ */
+  .footer {
+    background: #2E4A2E;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 40px 48px;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    line-height: 2.2;
+  }
+
+  .footer-brand {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    color: white;
+    letter-spacing: 5px;
+    margin-bottom: 4px;
+  }
+
+  /* ══ RESPONSIVE ══ */
   @media (max-width: 600px) {
-    .hero { padding: 60px 28px 64px; }
-    .hero-title { font-size: 32px; }
+    .hero { padding: 64px 28px 88px; }
+    .hero-title { font-size: 34px; }
     .hero-date-bar { flex-direction: column; gap: 10px; padding: 14px 24px; }
-    .poem-section { padding: 48px 28px; }
-    .body { padding: 0 28px 48px; }
-    .elements-grid { grid-template-columns: 1fr; }
-    .info-cards { grid-template-columns: 1fr; }
-    .blessing-section { padding: 48px 28px; }
-    .register-wrap { padding: 40px 28px; }
+    .teacher-block { grid-template-columns: 1fr; }
+    .teacher-photo { height: 280px; }
+    .poem-section { padding: 56px 28px 48px; }
+    .content { padding: 0 28px 56px; }
+    .time-row { grid-template-columns: 1fr; }
+    .blessing-section { padding: 56px 28px; }
+    .register-wrap { padding: 48px 28px; }
   }
 </style>
 </head>
@@ -601,18 +522,17 @@
     <div class="hero-brand">山所・沐光　a place of hills & shine</div>
     <div class="hero-tag">公益活動</div>
     <h1 class="hero-title">夏日小歇<br>公益頌缽</h1>
-    <div class="hero-divider"></div>
     <p class="hero-sub">在聲音裡，留一段呼吸給自己。</p>
     <div class="hero-date-bar">
-      <span>📅 <strong>2026.07.19（日）</strong></span>
-      <span>🕓 <strong>15:40 – 17:10</strong></span>
+      <span>📅 &nbsp;2026.07.19（日）</span>
+      <span>🕓 &nbsp;15:40 – 17:10</span>
     </div>
   </section>
 
   <!-- TEACHER -->
   <div class="teacher-block">
     <div class="teacher-photo">
-      <img src="DSC00625_JPG.avif" alt="Animosa 衫綦｜頌缽音療">
+      <img src="DSC00625_JPG.avif" alt="衫綦｜頌缽音療">
     </div>
     <div class="teacher-info">
       <div class="teacher-en">Instructor</div>
@@ -621,7 +541,7 @@
         <span class="teacher-role-tag">語言治療師</span>
         <span class="teacher-role-tag">頌缽音療</span>
       </div>
-      <div class="teacher-divider"></div>
+      <div class="teacher-dash"></div>
       <div class="teacher-bio">
         本業為兒童語言治療師。<br>
         在一次偶然的頌缽療癒中，<br>
@@ -636,34 +556,33 @@
 
   <!-- POEM -->
   <section class="poem-section">
-    <div class="poem-icon">🌿</div>
+    <div class="poem-leaf">🌿</div>
     <div class="poem-text">
       夏日的腳步太快，思緒也跟著奔忙。<br>
       有時候，我們需要的，只是<em>一席清涼</em>。<br><br>
       一片樹蔭，一陣微風，<br>
       以及一段留給自己的時光。
     </div>
-    <div class="poem-separator"></div>
+    <div class="poem-dot"></div>
     <div class="poem-text">
       讓缽聲輕輕流過身體，<br>
       像溪水流過山谷，<br>
       像風穿過樹梢。
     </div>
-    <div class="poem-separator"></div>
+    <div class="poem-dot"></div>
     <div class="poem-invite">邀請你在聲音裡躺一會兒。</div>
   </section>
 
-  <!-- BODY -->
-  <div class="body">
+  <!-- CONTENT -->
+  <div class="content">
 
     <!-- 活動內容 -->
-    <div class="sec-header">
-      <div class="sec-icon green">🌱</div>
-      <div class="sec-title">活動內容</div>
-      <div class="sec-line"></div>
+    <div class="sec-label">
+      <div class="sec-label-dot"></div>
+      <div class="sec-label-text">活動內容</div>
     </div>
 
-    <p class="elements-intro">
+    <p class="intro-text">
       本次頌缽演奏將以<strong>地、水、火、風、空</strong>五大元素為主軸，結合夏日、山林與土地的意象，透過不同音色與頻率的流動，陪伴身心慢慢回到平衡與安定。
     </p>
 
@@ -676,46 +595,45 @@
     </ul>
 
     <!-- 公益捐贈 -->
-    <div class="sec-header">
-      <div class="sec-icon green">🌳</div>
-      <div class="sec-title">公益捐贈</div>
-      <div class="sec-line"></div>
+    <div class="sec-label">
+      <div class="sec-label-dot"></div>
+      <div class="sec-label-text">公益捐贈</div>
     </div>
 
-    <div class="charity-block">
-      <div class="charity-title">本次活動所得，全數捐贈</div>
-      <div class="charity-org">臺灣山林復育協會</div>
-      <div class="charity-text">
-        感謝這片土地一直以來的滋養與守護，感謝山林、溪流與萬物的陪伴。<br><br>
+    <div class="charity-card">
+      <div class="charity-card-title">本次活動所得，全數捐贈</div>
+      <div class="charity-card-text">
+        感謝這片土地一直以來的滋養與守護，感謝山林、溪流與萬物的陪伴。<br>
         願照顧自己的同時，也將這份溫柔與善意，送回滋養著我們的土地。
       </div>
+      <a href="https://www.reforestation.tw/" target="_blank" rel="noopener" class="charity-link-btn">
+        臺灣山林復育協會<span class="charity-link-btn-arrow">↗</span>
+      </a>
     </div>
 
     <!-- 活動時間 -->
-    <div class="sec-header">
-      <div class="sec-icon sky">📅</div>
-      <div class="sec-title">活動時間</div>
-      <div class="sec-line"></div>
+    <div class="sec-label">
+      <div class="sec-label-dot"></div>
+      <div class="sec-label-text">活動時間</div>
     </div>
 
-    <div class="info-cards">
-      <div class="info-card">
-        <div class="info-card-label">Date</div>
-        <div class="info-card-value">07 / 19</div>
-        <div class="info-card-sub">2026年　星期日</div>
+    <div class="time-row">
+      <div class="time-card">
+        <div class="time-card-label">Date</div>
+        <div class="time-card-value">07 / 19</div>
+        <div class="time-card-sub">2026年　星期日</div>
       </div>
-      <div class="info-card">
-        <div class="info-card-label">Time</div>
-        <div class="info-card-value">15:40</div>
-        <div class="info-card-sub">至 17:10（共 90 分鐘）</div>
+      <div class="time-card">
+        <div class="time-card-label">Time</div>
+        <div class="time-card-value">15:40</div>
+        <div class="time-card-sub">至 17:10（共 90 分鐘）</div>
       </div>
     </div>
 
     <!-- 活動準備 -->
-    <div class="sec-header">
-      <div class="sec-icon earth">🧘</div>
-      <div class="sec-title">活動準備</div>
-      <div class="sec-line"></div>
+    <div class="sec-label">
+      <div class="sec-label-dot"></div>
+      <div class="sec-label-text">活動準備</div>
     </div>
 
     <ul class="prepare-list">
@@ -725,11 +643,11 @@
       <li><span class="p-mark">✦</span>一顆願意歇息的心</li>
     </ul>
 
-    <div class="prepare-note">
+    <div class="prepare-foot">
       獻給每一位想在這個夏天，為自己留下一段呼吸的人。
     </div>
 
-  </div><!-- /body -->
+  </div>
 
   <!-- BLESSING -->
   <section class="blessing-section">
@@ -753,7 +671,7 @@
   <footer class="footer">
     <div class="footer-brand">山所・沐光</div>
     <div>a place of hills & shine</div>
-    <div style="margin-top: 12px; opacity: 0.65; font-size: 12px; letter-spacing: 1px;">
+    <div style="margin-top: 10px; opacity: 0.5; font-size: 11px; letter-spacing: 1px;">
       夏日小歇｜公益頌缽　2026.07.19
     </div>
   </footer>
