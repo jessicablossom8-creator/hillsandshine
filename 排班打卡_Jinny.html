@@ -202,15 +202,12 @@ async function submitPunch(){
   st.className='status'; st.textContent='送出中…';
 
   try {
-    const r = await fetch(API_URL, {
-      method:'POST',
-      body: JSON.stringify({
-        action:'punch',
-        empId:EMP.id, empName:EMP.name,
-        date:today, clockIn:inT, clockOut:outT||'',
-        hours, salary
-      })
+    const params = new URLSearchParams({
+      action:'punch', empId:EMP.id, empName:EMP.name,
+      date:today, clockIn:inT, clockOut:outT||'',
+      hours, salary
     });
+    const r = await fetch(`${API_URL}?${params}`);
     const j = await r.json();
     if(j.success){
       st.className='status ok';
@@ -233,10 +230,7 @@ async function submitPunch(){
 async function delRecord(rowId){
   if(!confirm('確定刪除這筆記錄？')) return;
   try {
-    await fetch(API_URL, {
-      method:'POST',
-      body: JSON.stringify({ action:'delete', rowId })
-    });
+    await fetch(`${API_URL}?action=delete&rowId=${encodeURIComponent(rowId)}`);
     await loadRecords();
   } catch(e){ alert('刪除失敗：'+e.message); }
 }
