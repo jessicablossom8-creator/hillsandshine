@@ -123,6 +123,23 @@ const DAYS = ['日','一','二','三','四','五','六'];
 let cur = new Date(); cur.setDate(1);
 let records = [];
 
+// ── JSONP：繞過 CORS redirect 問題 ──
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+    window[cb] = data => {
+      delete window[cb];
+      script.remove();
+      if (data.error) reject(new Error(data.error));
+      else resolve(data);
+    };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('Failed to fetch')); };
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+    document.head.appendChild(script);
+  });
+}
+
 // ── 初始化 ──
 document.getElementById('empName').textContent = EMP.name;
 document.getElementById('empRate').textContent = `${EMP.role}・時薪 NT$${EMP.rate}`;
@@ -150,8 +167,8 @@ async function loadRecords(){
   const ym = monthKey(cur.getFullYear(), cur.getMonth());
   document.getElementById('logList').innerHTML = '<div class="syncing">載入中…</div>';
   try {
-    const r = await fetch(`${API_URL}?action=get&ym=${ym}&empId=${EMP.id}`);
-    const j = await r.json();
+    const r = await jsonp(`${API_URL}?action=get&ym=${ym}&empId=${EMP.id}`);
+    const j = r;
     records = (j.data || []).sort((a,b)=>a.date.localeCompare(b.date));
     renderLog();
     renderSummary();
@@ -207,8 +224,8 @@ async function submitPunch(){
       date:today, clockIn:inT, clockOut:outT||'',
       hours, salary
     });
-    const r = await fetch(`${API_URL}?${params}`);
-    const j = await r.json();
+    const r = await jsonp(`${API_URL}?${params}`);
+    const j = r;
     if(j.success){
       st.className='status ok';
       st.textContent = outT
@@ -230,7 +247,7 @@ async function submitPunch(){
 async function delRecord(rowId){
   if(!confirm('確定刪除這筆記錄？')) return;
   try {
-    await fetch(`${API_URL}?action=delete&rowId=${encodeURIComponent(rowId)}`);
+    await jsonp(`${API_URL}?action=delete&rowId=${encodeURIComponent(rowId)}`);
     await loadRecords();
   } catch(e){ alert('刪除失敗：'+e.message); }
 }
