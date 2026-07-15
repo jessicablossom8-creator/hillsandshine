@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>找到你的老師｜山所·沐光（空瑜）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: #EBF2F1;
+    color: #3A3530;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 44px 24px 52px;
+  }
+  .header { text-align: center; margin-bottom: 30px; }
+  .studio-name { font-size: 11px; letter-spacing: 4px; color: #B5A89A; margin-bottom: 12px; text-transform: uppercase; }
+  h1 { font-size: 24px; font-weight: 400; letter-spacing: 3px; color: #3A3530; margin-bottom: 5px; }
+  .map-subtitle { font-size: 13px; color: #9A8C7E; letter-spacing: 2px; }
+  .chart-wrap { width: 680px; max-width: 100%; }
+  #chart-svg { width: 100%; height: auto; display: block; }
+  .info-panel {
+    width: 680px; max-width: 100%; background: #fff; border: 1px solid #E8E0D8;
+    border-radius: 14px; padding: 20px 24px; margin-top: 16px;
+    min-height: 90px; display: flex; align-items: center;
+  }
+  .info-placeholder { color: #C5BAB0; font-size: 13px; width: 100%; text-align: center; letter-spacing: 1px; }
+  .info-content { width: 100%; }
+  .info-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
+  .info-teacher { font-size: 18px; font-weight: 400; letter-spacing: 1px; }
+  .info-dot { font-size: 14px; color: #C5BAB0; }
+  .info-course { font-size: 14px; color: #6A5D54; }
+  .info-meta { font-size: 12px; color: #9A8C7E; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .info-desc { font-size: 13px; color: #5A5048; line-height: 1.85; margin-bottom: 10px; }
+  .info-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .info-tag { padding: 3px 10px; border: 1px solid #D4C5B8; border-radius: 12px; font-size: 11px; color: #9A8C7E; }
+  .info-book {
+    display: inline-block; padding: 7px 20px;
+    background: #3A3530; color: #EBF2F1;
+    border-radius: 20px; font-size: 12px; letter-spacing: 1px;
+    text-decoration: none; font-family: inherit; transition: background 0.15s;
+  }
+  .info-book:hover { background: #5A5048; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: center; margin-top: 18px; width: 680px; max-width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #7A6E65; cursor: pointer; padding: 3px 6px; border-radius: 6px; transition: background 0.15s; }
+  .legend-item:hover { background: rgba(255,255,255,0.7); }
+  .legend-item.dimmed { opacity: 0.3; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  @media (max-width: 720px) { .chart-wrap, .info-panel, .legend { width: 100%; } }
+  @media (max-width: 520px) {
+    body { padding: 28px 14px 40px; }
+    h1 { font-size: 20px; }
+    .info-panel { padding: 14px 16px; }
+    .info-teacher { font-size: 16px; }
+    .info-desc { font-size: 12px; line-height: 1.75; }
+    .legend { gap: 8px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="studio-name">Hills &amp; Shine · 山所·沐光</div>
+  <h1>找到你的老師</h1>
+  <div class="map-subtitle">空瑜探索地圖</div>
+</div>
+<div class="chart-wrap">
+  <svg id="chart-svg" viewBox="0 0 680 490" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<div class="info-panel" id="info-panel">
+  <div class="info-placeholder">點擊圓點，查看課程介紹</div>
+</div>
+<div class="legend" id="legend"></div>
+<script>
+const TEACHERS = { 'Leaf':'#5B9B9F', 'Penny':'#C4835A', 'Angela':'#8B7BA8', 'Aasta':'#C4745F', 'Miko':'#B97EA0' };
+const SVG_W=680, SVG_H=490;
+const PAD={left:112,right:24,top:64,bottom:52};
+const CW=SVG_W-PAD.left-PAD.right, CH=SVG_H-PAD.top-PAD.bottom;
+const CX0=PAD.left, CY0=PAD.top, CX1=CX0+CW, CY1=CY0+CH;
+const N_ROWS=4, N_COLS=3;
+const ROW_H=CH/N_ROWS, COL_W=CW/N_COLS;
+const ROW_LABELS=['舞  綢','空 中 環','空瑜串聯','基礎空瑜'];
+const COL_LABELS=['入  門','初 ／ 中 階','進  階'];
+const COL_SUB=['Lv.0','Lv.0 – 1','Lv.1-2 ／ Lv.0-2'];
+const courses=[
+  {teacher:'Leaf',  short:'基礎空瑜',course:'基礎空瑜',          row:3,col:0,level:'Lv.0',    time:'週日早上',            desc:'安全感優先的入門體驗，讓新手也不怕接觸掛布。以扎實的基礎動作為核心，循序漸進，讓你在掛布上安全又漂亮地成長。',tags:['新手友善','零基礎OK','扎實基礎']},
+  {teacher:'Penny', short:'基礎空瑜',course:'基礎空瑜',          row:3,col:0,level:'Lv.0',    time:'週二晚上',            desc:'充滿活力的空中瑜伽入門課。暖身融合伸展與核心肌力訓練，依照同學狀態靈活調整，細節引導讓動作更漂亮、上課更快樂。',tags:['快樂動態','核心訓練','細節引導']},
+  {teacher:'Angela',short:'基礎空瑜',course:'基礎空瑜',          row:3,col:0,level:'Lv.0',    time:'週二早上 ／ 週一晚上',desc:'優雅而細膩的空中入門體驗。Angela 以精緻的動作引導帶你認識掛布，讓練習者在美感與安全中建立扎實基礎。不逼迫、不強求，相信每一個當下都是最好的你。',tags:['優雅藝術','精緻引導','美感呈現']},
+  {teacher:'Aasta', short:'基礎空瑜',course:'基礎空瑜',          row:3,col:0,level:'Lv.0',    time:'週日晚上',            desc:'積極正向的空瑜入門課。Aasta 設定清晰的進度目標，帶著你勇敢嘗試每個動作，課程有強度也有成就感，讓你在掛布上發現身體更多的可能。',tags:['勇敢美麗','有強度','積極進取']},
+  {teacher:'Miko',  short:'基礎空瑜',course:'基礎空瑜',          row:3,col:0,level:'Lv.0',    time:'週日工坊（隔週）',    desc:'工坊形式的療癒空瑜體驗，隔週日連續三堂。以深度沉浸的節奏探索掛布，讓每位學員有充裕時間體會與自己身體的對話。',tags:['療癒自我','工坊制','深度沉浸']},
+  {teacher:'Leaf',  short:'空瑜串聯',course:'空瑜串聯',          row:2,col:1,level:'Lv.0-1',  time:'平日晚上',            desc:'在基礎掌握後進入串聯練習，動作可單獨完成也可串成 Flow。Leaf 依學員程度決定是否帶入延伸動作，讓每位同學在各自節奏中前進，安全且有成就感。',tags:['基礎～中階','Flow 練習','輕鬆成長']},
+  {teacher:'Angela',short:'空瑜串聯',course:'空瑜串聯',          row:2,col:2,level:'Lv.1-2',  time:'週五晚上',            desc:'山所唯一的進階空瑜串聯課。在熟悉基礎後進入藝術性的串流練習，Angela 帶著你在空中展現力量與美感，是追求更高層次體驗的最佳選擇。',tags:['進階課','山所唯一','藝術展現']},
+  {teacher:'Angela',short:'空中環',  course:'空中環（Lyra Hoop）',row:1,col:1,level:'Lv.0-1',  time:'週四早上 ／ 週五晚上（隔週）',desc:'以優雅視角詮釋空中環技巧。在鋼環上感受身體的線條與力量，Angela 的引導讓技術動作充滿美學，適合入門到初階練習者。',tags:['空中環','美感呈現','Lv.0～1']},
+  {teacher:'Aasta', short:'空中環',  course:'空中環（Lyra Hoop）',row:1,col:2,level:'Lv.0-2',  time:'週四晚上 ／ 週六晚上（隔週）',desc:'從入門到高階的完整空中環旅程。Aasta 積極正向的教學讓你不畏挑戰，在環上建立力量與技術，清晰的進度規劃讓你每堂課都能看見自己的成長。',tags:['Lv.0～2','積極挑戰','清晰進度']},
+  {teacher:'Miko',  short:'空中環',  course:'空中環（Lyra Hoop）',row:1,col:2,level:'Lv.0-2',  time:'週日工坊（隔週）',    desc:'以療癒視角進行的空中環練習，工坊形式讓每堂課都有充分的學習與感受時間。在環上找到自己喜歡的樣子，技術練習同時成為自我探索的旅程。',tags:['工坊制','療癒探索','Lv.0～2']},
+  {teacher:'Angela',short:'舞  綢',  course:'空中舞綢（Aerial Silk）',row:0,col:1,level:'Lv.0-1',time:'週四早上 ／ 週五晚上（隔週）',desc:'詩意的空中舞綢體驗。在柔軟的綢緞中編織身體的動作，Angela 以藝術家的眼光帶你探索垂直空間中的流動之美，適合入門到初階練習者。',tags:['舞綢','舞動詩意','Lv.0～1']},
+  {teacher:'Aasta', short:'舞  綢',  course:'空中舞綢（Aerial Silk）',row:0,col:2,level:'Lv.0-2',time:'週六晚上（隔週）',  desc:'進階舞綢導師。Aasta 帶著你在綢緞中爬繩、翻轉、停留，以扎實技術為基礎，讓動作兼具力量與舞蹈性，適合想深入探索舞綢的學員。',tags:['Lv.0～2','技術扎實','舞動力量']},
+  {teacher:'Miko',  short:'舞  綢',  course:'空中舞綢（Aerial Silk）',row:0,col:2,level:'Lv.0-2',time:'週日工坊（隔週）',  desc:'Miko 的舞綢課如同一場空中的靜心儀式。工坊制的連續三堂讓你真正沉浸在綢緞的世界，在空中找到喜歡自己的模樣。',tags:['工坊制','靜心儀式','Lv.0～2']},
+];
+const R=19;
+function assignPos(){
+  const cells={};
+  courses.forEach((c,i)=>{ const k=c.row+'-'+c.col; if(!cells[k])cells[k]=[]; cells[k].push(i); });
+  Object.entries(cells).forEach(([k,ids])=>{
+    const [ri,ci]=k.split('-').map(Number);
+    const cx=CX0+COL_W*(ci+0.5), cy=CY0+ROW_H*(ri+0.5), n=ids.length, sp=40;
+    if(n===1){courses[ids[0]]._x=cx;courses[ids[0]]._y=cy;}
+    else if(n===2){courses[ids[0]]._x=cx-sp*0.5;courses[ids[0]]._y=cy;courses[ids[1]]._x=cx+sp*0.5;courses[ids[1]]._y=cy;}
+    else if(n===3){courses[ids[0]]._x=cx-sp;courses[ids[0]]._y=cy;courses[ids[1]]._x=cx;courses[ids[1]]._y=cy;courses[ids[2]]._x=cx+sp;courses[ids[2]]._y=cy;}
+    else if(n===5){
+      courses[ids[0]]._x=cx-sp*1.5;courses[ids[0]]._y=cy-19;
+      courses[ids[1]]._x=cx;       courses[ids[1]]._y=cy-19;
+      courses[ids[2]]._x=cx+sp*1.5;courses[ids[2]]._y=cy-19;
+      courses[ids[3]]._x=cx-sp*0.75;courses[ids[3]]._y=cy+21;
+      courses[ids[4]]._x=cx+sp*0.75;courses[ids[4]]._y=cy+21;
+    }
+  });
+}
+let selected=null, dimmedTeacher=null;
+function dimOthers(t){
+  document.getElementById('chart-svg').querySelectorAll('.cdot').forEach(d=>d.setAttribute('opacity',d.dataset.teacher===t?'1':'0.12'));
+  document.querySelectorAll('.legend-item').forEach(it=>it.classList.toggle('dimmed',it.dataset.teacher!==t));
+}
+function undim(){
+  document.getElementById('chart-svg').querySelectorAll('.cdot').forEach(d=>d.removeAttribute('opacity'));
+  document.querySelectorAll('.legend-item').forEach(it=>it.classList.remove('dimmed'));
+}
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.appendChild(e);return e;}
+function svgT(p,x,y,s,sz,fill,anc,opts={}){const e=document.createElementNS(NS,'text');e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('text-anchor',anc||'middle');e.setAttribute('font-size',sz);e.setAttribute('fill',fill);e.setAttribute('font-family','Georgia,serif');if(opts.w)e.setAttribute('font-weight',opts.w);if(opts.tf)e.setAttribute('transform',opts.tf);if(opts.i)e.setAttribute('font-style','italic');e.textContent=s;p.appendChild(e);}
+function render(){
+  const svg=document.getElementById('chart-svg'); svg.innerHTML='';
+  const rowBg=['#F2F8F7','#F7FAF8','#F2F8F7','#F7FAF8'];
+  for(let r=0;r<N_ROWS;r++) el('rect',{x:CX0,y:CY0+ROW_H*r,width:CW,height:ROW_H,fill:rowBg[r]},svg);
+  el('rect',{x:CX0,y:CY0,width:CW,height:CH,fill:'none',stroke:'#CDBFB5','stroke-width':'1'},svg);
+  for(let c=1;c<N_COLS;c++) el('line',{x1:CX0+COL_W*c,y1:CY0,x2:CX0+COL_W*c,y2:CY1,stroke:'#CDBFB5','stroke-width':'1','stroke-dasharray':'5 4'},svg);
+  for(let r=1;r<N_ROWS;r++) el('line',{x1:CX0,y1:CY0+ROW_H*r,x2:CX1,y2:CY0+ROW_H*r,stroke:'#CDBFB5','stroke-width':'1','stroke-dasharray':'5 4'},svg);
+  for(let c=0;c<N_COLS;c++){const cx=CX0+COL_W*(c+0.5);svgT(svg,cx,CY0-32,COL_LABELS[c],'11.5','#6A5D54','middle',{w:'600'});svgT(svg,cx,CY0-16,COL_SUB[c],'9.5','#B5A89A','middle');}
+  for(let r=0;r<N_ROWS;r++){const cy=CY0+ROW_H*(r+0.5);svgT(svg,CX0-14,cy+5,ROW_LABELS[r],'12','#6A5D54','end',{w:'600'});}
+  svgT(svg,CX0+CW/2,CY1+36,'← 適合程度 →','10','#B5A89A','middle',{i:true});
+  const bg=el('rect',{x:CX0,y:CY0,width:CW,height:CH,fill:'transparent'},svg);
+  bg.addEventListener('click',()=>{dimmedTeacher=null;selected=null;undim();document.getElementById('info-panel').innerHTML='<div class="info-placeholder">點擊圓點，查看課程介紹</div>';});
+  courses.forEach((c,i)=>{
+    const x=c._x,y=c._y,color=TEACHERS[c.teacher],isSel=selected===i;
+    const g=el('g',{style:'cursor:pointer',class:'cdot','data-teacher':c.teacher},svg);
+    if(isSel)el('circle',{cx:x,cy:y,r:R+6,fill:'none',stroke:color,'stroke-width':'1.5',opacity:'0.4'},g);
+    el('circle',{cx:x,cy:y,r:isSel?R+2:R,fill:isSel?color:color+'CC',stroke:color,'stroke-width':isSel?'1.5':'1'},g);
+    svgT(g,x,y-1,c.teacher,'8.5','#FFF','middle',{w:'500'});
+    svgT(g,x,y+11,c.level,'7','rgba(255,255,255,0.88)','middle');
+    g.addEventListener('click',e=>{e.stopPropagation();selected=i;dimmedTeacher=c.teacher;showInfo(i);render();});
+    g.addEventListener('mouseenter',()=>dimOthers(c.teacher));
+    g.addEventListener('mouseleave',()=>{if(dimmedTeacher)dimOthers(dimmedTeacher);else undim();});
+  });
+  if(dimmedTeacher)dimOthers(dimmedTeacher);
+}
+function showInfo(idx){
+  const c=courses[idx],color=TEACHERS[c.teacher];
+  document.getElementById('info-panel').innerHTML='<div class="info-content"><div class="info-top"><span class="info-teacher" style="color:'+color+'">'+c.teacher+'</span><span class="info-dot">·</span><span class="info-course">'+c.course+'</span></div><div class="info-meta">'+c.level+'　｜　'+c.time+'</div><div class="info-desc">'+c.desc+'</div><div class="info-tags">'+c.tags.map(t=>'<span class="info-tag">'+t+'</span>').join('')+'</div><a href="https://www.fit-book.com.tw/hillsandshine/449?" target="_blank" rel="noopener" class="info-book">預約課程</a></div>';
+}
+function buildLegend(){
+  const lg=document.getElementById('legend');
+  Object.entries(TEACHERS).forEach(([name,color])=>{
+    const item=document.createElement('div');item.className='legend-item';item.dataset.teacher=name;
+    item.innerHTML='<div class="legend-dot" style="background:'+color+'"></div>'+name;
+    item.addEventListener('mouseenter',()=>dimOthers(name));
+    item.addEventListener('mouseleave',()=>{if(dimmedTeacher)dimOthers(dimmedTeacher);else undim();});
+    item.addEventListener('click',()=>{const idx=courses.findIndex(c=>c.teacher===name);if(idx>=0){dimmedTeacher=name;selected=idx;showInfo(idx);render();}});
+    lg.appendChild(item);
+  });
+}
+assignPos(); buildLegend(); render();
+</script>
+</body>
+</html>
