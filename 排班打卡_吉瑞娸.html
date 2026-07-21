@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>山所・沐光｜吉瑞娸 打卡</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400&display=swap');
+  :root {
+    --teal:#2C6E7A; --teal-m:#4A9BAA; --teal-l:#D6EEF2; --teal-p:#EEF8FA;
+    --gold:#8B6914; --gold-l:#FDF3DC;
+    --green:#4a7a50; --green-l:#e8f4ea;
+    --red:#c0392b; --red-l:#fdecea;
+    --gray:#f5f5f5; --border:#ddd; --text:#2D2D2D; --muted:#888;
+    --white:#fff; --radius:12px; --shadow:0 2px 16px rgba(0,0,0,.08);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Noto Sans TC',sans-serif; background:#f0f4f5; color:var(--text); min-height:100vh; }
+
+  .header { background:linear-gradient(135deg,var(--teal) 0%,var(--teal-m) 100%); color:#fff; padding:20px 20px 16px; }
+  .header .brand { font-size:11px; opacity:.6; letter-spacing:2px; margin-bottom:4px; }
+  .header h1 { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:400; letter-spacing:2px; }
+  .header .rate { font-size:12px; opacity:.65; margin-top:3px; }
+
+  .month-nav { display:flex; align-items:center; gap:12px; padding:14px 20px; background:#fff; border-bottom:1px solid var(--teal-l); }
+  .month-nav button { background:var(--teal-p); border:1px solid var(--teal-l); color:var(--teal); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:15px; }
+  .month-label { font-family:'Noto Serif TC',serif; font-size:16px; color:var(--teal); min-width:100px; text-align:center; letter-spacing:1px; }
+
+  .summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:14px; }
+  .card { background:var(--white); border-radius:var(--radius); padding:14px 10px; box-shadow:var(--shadow); text-align:center; }
+  .card .val { font-size:24px; font-weight:700; color:var(--teal); }
+  .card.salary .val { color:var(--gold); font-size:20px; }
+  .card .lbl { font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:4px; }
+
+  .punch-box { margin:0 14px 12px; background:var(--white); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .punch-box h2 { font-size:13px; color:var(--teal); margin-bottom:12px; }
+  .today-info { font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .time-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .time-row label { font-size:12px; color:var(--muted); min-width:36px; }
+  .time-row input[type=time] {
+    flex:1; min-width:120px; border:1px solid var(--border); border-radius:8px;
+    padding:10px 12px; font-size:16px; font-family:inherit; color:var(--text);
+    background:var(--teal-p); outline:none;
+  }
+  .btn-submit { width:100%; padding:13px; background:var(--teal); color:#fff; border:none; border-radius:8px; font-size:15px; font-family:inherit; font-weight:500; cursor:pointer; margin-top:4px; }
+  .btn-submit:disabled { opacity:.5; cursor:not-allowed; }
+  .status { font-size:12px; margin-top:8px; min-height:18px; text-align:center; }
+  .status.ok { color:var(--green); }
+  .status.err { color:var(--red); }
+
+  .log-box { margin:0 14px 20px; background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+  .log-box h2 { font-size:13px; color:var(--teal); padding:14px 14px 0; }
+  .log-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--gray); }
+  .log-item:last-child { border-bottom:none; }
+  .log-date { font-size:13px; font-weight:500; min-width:80px; }
+  .log-time { font-size:12px; color:var(--muted); flex:1; }
+  .log-hrs { font-size:14px; font-weight:700; color:var(--teal); min-width:40px; text-align:right; }
+  .log-del { background:var(--red-l); color:var(--red); border:none; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; }
+  .empty { text-align:center; color:var(--muted); padding:24px; font-size:13px; }
+  .syncing { text-align:center; color:var(--teal); padding:16px; font-size:12px; }
+
+  .offline-note { margin:0 14px 14px; background:var(--gold-l); border-radius:var(--radius); padding:10px 14px; font-size:11px; color:var(--gold); line-height:1.7; }
+</style>
+</head>
+<body>
+
+<!-- ══ 員工設定（每人一份，只改這裡）══ -->
+<script>
+const EMP = {
+  id:   'jiruiqi',
+  name: '吉瑞娸',
+  role: '兼職小幫手',
+  rate: 200
+};
+// 部署後貼上你的 Apps Script 網址
+const API_URL = 'https://script.google.com/macros/s/AKfycbyOAL-q0b-npXDQhWIZpyGsabBuBuDFen88E3W7Nm_bWjDV-etunHBKBnAXqD7wQ3hD/exec';
+</script>
+
+<div class="header">
+  <div class="brand">山所・沐光｜打卡系統</div>
+  <h1 id="empName"></h1>
+  <div class="rate" id="empRate"></div>
+</div>
+
+<div class="month-nav">
+  <button onclick="changeMonth(-1)">‹</button>
+  <div class="month-label" id="monthLabel"></div>
+  <button onclick="changeMonth(1)">›</button>
+</div>
+
+<div class="summary">
+  <div class="card"><div class="val" id="sumDays">0</div><div class="lbl">天</div></div>
+  <div class="card"><div class="val" id="sumHrs">0</div><div class="lbl">工時</div></div>
+  <div class="card salary"><div class="val" id="sumSalary">0</div><div class="lbl">薪資</div></div>
+</div>
+
+<div class="punch-box">
+  <h2>⏱ 今日打卡</h2>
+  <div class="today-info" id="todayInfo"></div>
+  <div class="time-row">
+    <label>上班</label>
+    <input type="time" id="inTime" />
+  </div>
+  <div class="time-row">
+    <label>下班</label>
+    <input type="time" id="outTime" />
+  </div>
+  <button class="btn-submit" id="submitBtn" onclick="submitPunch()">送出打卡記錄</button>
+  <div class="status" id="status"></div>
+</div>
+
+<div class="log-box">
+  <h2>📋 本月記錄</h2>
+  <div id="logList"><div class="syncing">載入中…</div></div>
+</div>
+
+<div class="offline-note">
+  💡 記錄會即時同步到管理者後台。如網路不通，請稍後再送出。
+</div>
+
+<script>
+const DAYS = ['日','一','二','三','四','五','六'];
+let cur = new Date(); cur.setDate(1);
+let records = [];
+
+// ── JSONP：繞過 CORS redirect 問題 ──
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+    window[cb] = data => {
+      delete window[cb];
+      script.remove();
+      if (data.error) reject(new Error(data.error));
+      else resolve(data);
+    };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('Failed to fetch')); };
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+    document.head.appendChild(script);
+  });
+}
+
+// ── 初始化 ──
+document.getElementById('empName').textContent = EMP.name;
+document.getElementById('empRate').textContent = `${EMP.role}・時薪 NT$${EMP.rate}`;
+
+function pad(n){ return String(n).padStart(2,'0'); }
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function monthKey(y,m){ return `${y}-${pad(m+1)}`; }
+
+function calcHours(inT,outT){
+  if(!inT||!outT) return 0;
+  const [ih,im]=inT.split(':').map(Number);
+  const [oh,om]=outT.split(':').map(Number);
+  let mins=(oh*60+om)-(ih*60+im);
+  if(mins<0) mins+=1440;
+  let h=Math.ceil(mins/30)*0.5;
+  if(h>9) h-=1;
+  return h;
+}
+
+// ── 讀取記錄 ──
+async function loadRecords(){
+  const ym = monthKey(cur.getFullYear(), cur.getMonth());
+  document.getElementById('logList').innerHTML = '<div class="syncing">載入中…</div>';
+  try {
+    const r = await jsonp(`${API_URL}?action=get&ym=${ym}&empId=${EMP.id}`);
+    const j = r;
+    records = (j.data || []).sort((a,b)=>a.date.localeCompare(b.date));
+    renderLog();
+    renderSummary();
+  } catch(e){
+    document.getElementById('logList').innerHTML = '<div class="empty">⚠ 無法連線，請確認網路</div>';
+  }
+}
+
+// ── 渲染記錄 ──
+function renderLog(){
+  const list = document.getElementById('logList');
+  if(!records.length){ list.innerHTML='<div class="empty">本月尚無記錄</div>'; return; }
+  list.innerHTML = records.map(r=>{
+    const d = new Date(r.date+'T00:00:00');
+    const label = `${d.getMonth()+1}/${d.getDate()}（週${DAYS[d.getDay()]}）`;
+    return `<div class="log-item">
+      <div class="log-date">${label}</div>
+      <div class="log-time">${r.clockIn} – ${r.clockOut||'—'}</div>
+      <div class="log-hrs">${r.hours>0?r.hours+'hr':''}</div>
+      <button class="log-del" onclick="delRecord('${r.rowId}')">刪除</button>
+    </div>`;
+  }).join('');
+}
+
+// ── 統計 ──
+function renderSummary(){
+  let days=0, hrs=0;
+  records.forEach(r=>{ if(r.hours>0){days++; hrs+=Number(r.hours);} });
+  document.getElementById('sumDays').textContent = days;
+  document.getElementById('sumHrs').textContent = hrs%1===0?hrs:hrs.toFixed(1);
+  document.getElementById('sumSalary').textContent = Math.round(hrs*EMP.rate).toLocaleString();
+}
+
+// ── 送出打卡 ──
+async function submitPunch(){
+  const inT  = document.getElementById('inTime').value;
+  const outT = document.getElementById('outTime').value;
+  const st   = document.getElementById('status');
+  const btn  = document.getElementById('submitBtn');
+
+  if(!inT){ st.className='status err'; st.textContent='請輸入上班時間'; return; }
+
+  const today = todayStr();
+  const hours  = calcHours(inT, outT);
+  const salary = Math.round(hours * EMP.rate);
+
+  btn.disabled=true;
+  st.className='status'; st.textContent='送出中…';
+
+  try {
+    const params = new URLSearchParams({
+      action:'punch', empId:EMP.id, empName:EMP.name,
+      date:today, clockIn:inT, clockOut:outT||'',
+      hours, salary
+    });
+    const r = await jsonp(`${API_URL}?${params}`);
+    const j = r;
+    if(j.success){
+      st.className='status ok';
+      st.textContent = outT
+        ? `✓ 已送出！${today} 工時 ${hours}hr・薪資 NT$${salary.toLocaleString()}`
+        : `✓ 上班時間已記錄，下班後記得補打卡`;
+      await loadRecords();
+    } else {
+      throw new Error(j.error||'未知錯誤');
+    }
+  } catch(e){
+    st.className='status err';
+    st.textContent = '⚠ 送出失敗：' + e.message;
+  } finally {
+    btn.disabled=false;
+  }
+}
+
+// ── 刪除 ──
+async function delRecord(rowId){
+  if(!confirm('確定刪除這筆記錄？')) return;
+  try {
+    await jsonp(`${API_URL}?action=delete&rowId=${encodeURIComponent(rowId)}`);
+    await loadRecords();
+  } catch(e){ alert('刪除失敗：'+e.message); }
+}
+
+// ── 換月 ──
+function changeMonth(d){ cur.setMonth(cur.getMonth()+d); updateMonthLabel(); loadRecords(); }
+
+function updateMonthLabel(){
+  const y=cur.getFullYear(), m=cur.getMonth();
+  document.getElementById('monthLabel').textContent=`${y} 年 ${m+1} 月`;
+}
+
+// ── 今日資訊 ──
+function initToday(){
+  const d=new Date();
+  document.getElementById('todayInfo').textContent =
+    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}（週${DAYS[d.getDay()]}）`;
+}
+
+updateMonthLabel();
+initToday();
+loadRecords();
+</script>
+</body>
+</html>
